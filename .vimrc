@@ -50,6 +50,9 @@ colorscheme torte
  NeoBundle 'kana/vim-fakeclip'
  NeoBundle 'godlygeek/tabular'
  NeoBundle 'plasticboy/vim-markdown'
+ NeoBundle 'kien/ctrlp.vim'
+ NeoBundle 'mileszs/ack.vim'
+ NeoBundle 'rking/ag.vim'
 
  call neobundle#end()
 
@@ -69,3 +72,8 @@ colorscheme torte
 
  " vim-markdown
  let g:vim_markdown_folding_disabled=1
+
+ "ag
+ if executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+ endif
