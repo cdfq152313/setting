@@ -21,59 +21,86 @@ set confirm      " 操作過程有衝突時，以明確的文字來詢問
 set history=100  " 保留 100 個使用過的指令
 set laststatus=2
 colorscheme torte
+" copy paste to terminal
+nnoremap <silent> <F9> :set paste<CR>
 
- " Note: Skip initialization for vim-tiny or vim-small.
- if !1 | finish | endif
 
- if has('vim_starting')
-   if &compatible
-     set nocompatible               " Be iMproved
-   endif
+" Note: Skip initialization for vim-tiny or vim-small.
+if !1 | finish | endif
 
-   " Required:
-   set runtimepath+=~/.vim/bundle/neobundle.vim/
- endif
+if has('vim_starting')
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
 
- " Required:
- call neobundle#begin(expand('~/.vim/bundle/'))
+" Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
 
- " Let NeoBundle manage NeoBundle
- " Required:
- NeoBundleFetch 'Shougo/neobundle.vim'
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
 
- " My Bundles here:
- " Refer to |:NeoBundle-examples|.
- " Note: You don't set neobundle setting in .gvimrc!
- NeoBundle 'scrooloose/nerdtree'
- NeoBundle 'vim-scripts/taglist.vim'
- NeoBundle 'vim-scripts/CCTree'
- NeoBundle 'kana/vim-fakeclip'
- NeoBundle 'godlygeek/tabular'
- NeoBundle 'plasticboy/vim-markdown'
- NeoBundle 'kien/ctrlp.vim'
- NeoBundle 'mileszs/ack.vim'
- NeoBundle 'rking/ag.vim'
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
 
- call neobundle#end()
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'vim-scripts/taglist.vim'
+NeoBundle 'vim-scripts/cscope.vim'
+NeoBundle 'vim-scripts/CCTree'
+NeoBundle 'kana/vim-fakeclip'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'rking/ag.vim'
 
- " Required:
- filetype plugin indent on
+call neobundle#end()
 
- " If there are uninstalled bundles found on startup,
- " this will conveniently prompt you to install them.
- NeoBundleCheck
+" Required:
+filetype plugin indent on
 
- " nerdTree
- nnoremap <silent> <F5> :NERDTreeToggle<CR> 
-  " tag list
- nnoremap <silent> <F6> :TlistToggle<CR> 
- let Tlist_Use_Right_Window = 1
- let Tlist_Exit_OnlyWindow = 1
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
 
- " vim-markdown
- let g:vim_markdown_folding_disabled=1
+" nerdTree
+nnoremap <silent> <F5> :NERDTreeToggle<CR> 
+" tag list
+nnoremap <silent> <F6> :TlistToggle<CR> 
+let Tlist_Use_Right_Window = 1
+let Tlist_Exit_OnlyWindow = 1
 
- "ag
- if executable('ag')
-    let g:ackprg = 'ag --vimgrep'
- endif
+" cscope
+" in case your cscope execute is not in system path.
+" let g:cscope_cmd = 'D:/tools/vim/cscope.exe'
+" s: Find this C symbol
+map <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
+" g: Find this definition
+map <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
+" d: Find functions called by this function
+map <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
+" c: Find functions calling this function
+map <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
+" t: Find this text string
+map <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
+" e: Find this egrep pattern
+map <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
+" f: Find this file
+map <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
+" i: Find files #including this file
+map <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+map <leader>l :call ToggleLocationList()<CR>
+
+
+
+" vim-markdown
+let g:vim_markdown_folding_disabled=1
+
+"ag
+if executable('ag')
+let g:ackprg = 'ag --vimgrep'
+endif
