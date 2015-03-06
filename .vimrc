@@ -74,28 +74,6 @@ nnoremap <silent> <F6> :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
 
-" cscope
-" in case your cscope execute is not in system path.
-" let g:cscope_cmd = 'D:/tools/vim/cscope.exe'
-" s: Find this C symbol
-map <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
-" g: Find this definition
-map <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
-" d: Find functions called by this function
-map <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
-" c: Find functions calling this function
-map <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
-" t: Find this text string
-map <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
-" e: Find this egrep pattern
-map <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
-" f: Find this file
-map <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
-" i: Find files #including this file
-map <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
-map <leader>l :call ToggleLocationList()<CR>
-
-
 
 " vim-markdown
 let g:vim_markdown_folding_disabled=1
