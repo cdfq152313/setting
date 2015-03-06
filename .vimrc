@@ -49,7 +49,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Note: You don't set neobundle setting in .gvimrc!
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'vim-scripts/taglist.vim'
-NeoBundle 'vim-scripts/cscope.vim'
+NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/CCTree'
 NeoBundle 'kana/vim-fakeclip'
 NeoBundle 'godlygeek/tabular'
