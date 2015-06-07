@@ -5,7 +5,7 @@ set fileencodings=utf-8,cp950
 syntax on        " 語法上色顯示
 set nocompatible " VIM 不使用和 VI 相容的模式
 "set ai           " 自動縮排
-"set shiftwidth=4 " 設定縮排寬度 = 4
+set shiftwidth=4 " 設定縮排寬度 = 4
 set tabstop=4    " tab 的字元數
 "set expandtab   " 用 space 代替 tab
 
@@ -52,8 +52,6 @@ NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/CCTree'
 NeoBundle 'kana/vim-fakeclip'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'rking/ag.vim'
