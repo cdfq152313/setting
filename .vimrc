@@ -48,13 +48,11 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Refer to |:NeoBundle-examples|.
 " Note: You don't set neobundle setting in .gvimrc!
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'vim-scripts/taglist.vim'
-NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/CCTree'
-NeoBundle 'kana/vim-fakeclip'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
-NeoBundle 'rking/ag.vim'
 
 call neobundle#end()
 
@@ -72,11 +70,3 @@ nnoremap <silent> <F6> :TlistToggle<CR>
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
 
-
-" vim-markdown
-let g:vim_markdown_folding_disabled=1
-
-"ag
-if executable('ag')
-let g:ackprg = 'ag --vimgrep'
-endif
