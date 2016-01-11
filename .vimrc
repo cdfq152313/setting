@@ -66,6 +66,8 @@ NeoBundleCheck
 
 " nerdTree
 nnoremap <silent> <F5> :NERDTreeToggle<CR> 
+nnoremap <silent> <F7> :tabp<CR> 
+nnoremap <silent> <F8> :tabn<CR> 
 " tag list
 nnoremap <silent> <F6> :TlistToggle<CR> 
 let Tlist_Use_Right_Window = 1

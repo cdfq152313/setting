@@ -1,3 +1,4 @@
 curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh
-ln -f .vimrc ~/
-ln -f .bashrc ~/
+PWD=$(pwd)
+ln -fs $PWD/.vimrc ~/
+ln -fs $PWD/.bashrc ~/
