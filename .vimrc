@@ -70,4 +70,3 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 nnoremap <silent> <F6> :TlistToggle<CR> 
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
-endif
