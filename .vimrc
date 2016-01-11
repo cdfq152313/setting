@@ -49,6 +49,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Note: You don't set neobundle setting in .gvimrc!
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/CCTree'
 NeoBundle 'kien/ctrlp.vim'
@@ -69,4 +70,4 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 nnoremap <silent> <F6> :TlistToggle<CR> 
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
-
+endif
