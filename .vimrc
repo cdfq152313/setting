@@ -48,6 +48,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Refer to |:NeoBundle-examples|.
 " Note: You don't set neobundle setting in .gvimrc!
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/taglist.vim'
@@ -64,16 +65,27 @@ filetype plugin indent on
 " this will conveniently prompt you to install them.
 NeoBundleCheck
 
-" nerdTree
-nnoremap <silent> <F5> :NERDTreeToggle<CR> 
-nnoremap <silent> <F7> :tabp<CR> 
-nnoremap <silent> <F8> :tabn<CR> 
+" open window 
+nnoremap <silent> <F2> :NERDTreeTabsToggle<CR> 
+nnoremap <silent> <C-F2> :TlistToggle<CR> 
+
+
+" Move focus among window/spilt
+nnoremap <silent> <F3> :tabp<CR> 
+nnoremap <silent> <F4> :tabn<CR> 
+nnoremap <silent> <C-F3> :wincmd h<CR> 
+nnoremap <silent> <C-F4> :wincmd h<CR> 
+nnoremap <silent> <A-Left> :tabp<CR>
+nnoremap <silent> <A-Right> :tabn<CR>
+nnoremap <silent> <C-Up> :wincmd k<CR> 
+nnoremap <silent> <C-Down> :wincmd j<CR> 
+nnoremap <silent> <C-Left> :wincmd h<CR> 
+nnoremap <silent> <C-Right> :wincmd l<CR> 
 
 " Cscope
-nmap <silent> <F4> <C-\>
+nmap <silent> <F5> <C-\>
 
 " tag list
-nnoremap <silent> <F6> :TlistToggle<CR> 
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
 
