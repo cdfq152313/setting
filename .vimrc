@@ -56,7 +56,7 @@ NeoBundle 'vim-scripts/CCTree'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'davidhalter/jedi-vim'
+"NeoBundle 'davidhalter/jedi-vim'
 
 call neobundle#end()
 
@@ -97,3 +97,5 @@ nmap <silent> <F5> <C-\>
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
 
+" jedi-vim
+let g:jedi#force_py_version = 3
