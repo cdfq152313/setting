@@ -57,6 +57,7 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Valloric/YouCompleteMe'
 "NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'vim-scripts/bash-support.vim'
 
 call neobundle#end()
 
@@ -99,3 +100,8 @@ let Tlist_Exit_OnlyWindow = 1
 
 " jedi-vim
 let g:jedi#force_py_version = 3
+
+" bash-script
+let g:BASH_AuthorName = 'Denny Cheng'
+let g:BASH_Email = 'cdfq152313@gmail.com'
+
