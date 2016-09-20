@@ -76,6 +76,8 @@ nnoremap <silent> <C-F2> :TlistToggle<CR>
 " Move focus among window/spilt
 nnoremap <silent> <F3> :tabp<CR> 
 nnoremap <silent> <F4> :tabn<CR> 
+nnoremap <silent> <A-h> :tabp<CR>
+nnoremap <silent> <A-l> :tabn<CR>
 nnoremap <silent> <A-Left> :tabp<CR>
 nnoremap <silent> <A-Right> :tabn<CR>
 
@@ -85,11 +87,17 @@ nnoremap <silent> <C-Up> :wincmd k<CR>
 nnoremap <silent> <C-Down> :wincmd j<CR> 
 nnoremap <silent> <C-Left> :wincmd h<CR> 
 nnoremap <silent> <C-Right> :wincmd l<CR> 
+nnoremap <silent> <C-k> :wincmd k<CR> 
+nnoremap <silent> <C-j> :wincmd j<CR> 
+nnoremap <silent> <C-h> :wincmd h<CR> 
+nnoremap <silent> <C-l> :wincmd l<CR> 
 
 nmap <silent> <S-F3> <C-o>
 nmap <silent> <S-F4> <C-i> 
 nmap <silent> <S-Left> <C-o>
 nmap <silent> <S-Right> <C-i>
+nmap <silent> <S-h> <C-o>
+nmap <silent> <S-l> <C-i>
 
 " Cscope
 nmap <silent> <F5> <C-\>
