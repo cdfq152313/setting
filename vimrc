@@ -57,7 +57,6 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'Valloric/YouCompleteMe'
 "NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'vim-scripts/bash-support.vim'
 
 call neobundle#end()
 
