@@ -34,6 +34,6 @@ echo '. ~/.bash_prompt' >> ~/.bashrc
 ```
 
 ## 參考頁面
-https://github.com/pyenv/pyenv-installer
-https://gist.github.com/romanlevin/5e9422045bb6a5eb6558cbe371cd8635
+- https://github.com/pyenv/pyenv-installer
+- https://gist.github.com/romanlevin/5e9422045bb6a5eb6558cbe371cd8635
 
