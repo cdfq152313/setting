@@ -84,12 +84,11 @@ function set_prompt_symbol () {
   fi
 }
 
-# Determine active Python virtualenv details.
 function set_virtualenv () {
-  if [[ `pyenv version-name` == "system" ]] ; then
+  if test -z "$VIRTUAL_ENV" ; then
       PYTHON_VIRTUALENV=""
   else
-      PYTHON_VIRTUALENV="${BLUE}[`pyenv version-name`]${COLOR_NONE} "
+      PYTHON_VIRTUALENV="${BLUE}[`basename \"$VIRTUAL_ENV\"`]${COLOR_NONE} "
   fi
 }
 
