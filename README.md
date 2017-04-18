@@ -4,7 +4,7 @@
 1. 設置~/.vimrc (vim的設定檔)
 2. 設置~/.bashrc (bash的設定檔)
 
-# Vimrc
+# vimrc
 
 ## 設定.vimrc
 
@@ -25,11 +25,11 @@ curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.s
 ```
 
 
-# 設定.bashrc
+# bashrc
 
 ## bash prompt
 
-在當前目錄下打以下的指令，可以在將家目錄的.bashrc中加入額外bash_prompt的設定。
+在當前目錄下打以下的指令，可以將家目錄的.bashrc中加入額外bash_prompt的設定。
 
 ```bash
 echo ". $PWD/bash_prompt.sh" >> ~/.bashrc
