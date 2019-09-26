@@ -1,7 +1,7 @@
 " 檔案編碼
 set encoding=utf-8
 set fileencodings=utf-8,cp950
-" 編輯喜好設定 
+" 編輯喜好設定
 syntax on        " 語法上色顯示
 set nocompatible " VIM 不使用和 VI 相容的模式
 "set ai           " 自動縮排
@@ -50,13 +50,9 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'vim-scripts/cscope_macros.vim'
 NeoBundle 'vim-scripts/taglist.vim'
-NeoBundle 'vim-scripts/CCTree'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'mileszs/ack.vim'
-NeoBundle 'Valloric/YouCompleteMe'
-"NeoBundle 'davidhalter/jedi-vim'
 
 call neobundle#end()
 
@@ -67,48 +63,41 @@ filetype plugin indent on
 " this will conveniently prompt you to install them.
 NeoBundleCheck
 
-" open window 
-nnoremap <silent> <F2> :NERDTreeTabsToggle<CR> 
-nnoremap <silent> <C-F2> :TlistToggle<CR> 
+" open window
+nnoremap <silent> <F2> :NERDTreeTabsToggle<CR>
+nnoremap <silent> <C-F2> :TlistToggle<CR>
 
 
 " Move focus among window/spilt
-nnoremap <silent> <F3> :tabp<CR> 
-nnoremap <silent> <F4> :tabn<CR> 
+nnoremap <silent> <F3> :tabp<CR>
+nnoremap <silent> <F4> :tabn<CR>
 nnoremap <silent> <A-h> :tabp<CR>
 nnoremap <silent> <A-l> :tabn<CR>
 nnoremap <silent> <A-Left> :tabp<CR>
 nnoremap <silent> <A-Right> :tabn<CR>
 
-nnoremap <silent> <C-F3> :wincmd h<CR> 
-nnoremap <silent> <C-F4> :wincmd h<CR> 
-nnoremap <silent> <C-Up> :wincmd k<CR> 
-nnoremap <silent> <C-Down> :wincmd j<CR> 
-nnoremap <silent> <C-Left> :wincmd h<CR> 
-nnoremap <silent> <C-Right> :wincmd l<CR> 
-nnoremap <silent> <C-k> :wincmd k<CR> 
-nnoremap <silent> <C-j> :wincmd j<CR> 
-nnoremap <silent> <C-h> :wincmd h<CR> 
-nnoremap <silent> <C-l> :wincmd l<CR> 
+nnoremap <silent> <C-F3> :wincmd h<CR>
+nnoremap <silent> <C-F4> :wincmd h<CR>
+nnoremap <silent> <C-Up> :wincmd k<CR>
+nnoremap <silent> <C-Down> :wincmd j<CR>
+nnoremap <silent> <C-Left> :wincmd h<CR>
+nnoremap <silent> <C-Right> :wincmd l<CR>
+nnoremap <silent> <C-k> :wincmd k<CR>
+nnoremap <silent> <C-j> :wincmd j<CR>
+nnoremap <silent> <C-h> :wincmd h<CR>
+nnoremap <silent> <C-l> :wincmd l<CR>
 
 nmap <silent> <S-F3> <C-o>
-nmap <silent> <S-F4> <C-i> 
+nmap <silent> <S-F4> <C-i>
 nmap <silent> <S-Left> <C-o>
 nmap <silent> <S-Right> <C-i>
 nmap <silent> <S-h> <C-o>
 nmap <silent> <S-l> <C-i>
 
-" Cscope
-nmap <silent> <F5> <C-\>
-
 " tag list
 let Tlist_Use_Right_Window = 1
 let Tlist_Exit_OnlyWindow = 1
 
-" jedi-vim
-let g:jedi#force_py_version = 3
-
-" bash-script
-let g:BASH_AuthorName = 'Denny Cheng'
-let g:BASH_Email = 'cdfq152313@gmail.com'
-
+" nerdcommenter
+nmap <silent> <C-_> <leader>c<space>
+vmap <silent> <C-_> <leader>c<space>
