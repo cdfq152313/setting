@@ -1,8 +1,13 @@
+call plug#begin('~/.vim/plugged')
+Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdcommenter'
+call plug#end()
+
 " 檔案編碼
 set encoding=utf-8
 set fileencodings=utf-8,cp950
 " 編輯喜好設定
-syntax on        " 語法上色顯示
+syntax on " 語法上色顯示
 set nocompatible " VIM 不使用和 VI 相容的模式
 "set ai           " 自動縮排
 set shiftwidth=4 " 設定縮排寬度 = 4
@@ -24,49 +29,8 @@ colorscheme torte
 " copy paste to terminal
 nnoremap <silent> <F9> :set paste<CR>
 
-
-" Note: Skip initialization for vim-tiny or vim-small.
-if !1 | finish | endif
-
-if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
-
-" Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
-" Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" My Bundles here:
-" Refer to |:NeoBundle-examples|.
-" Note: You don't set neobundle setting in .gvimrc!
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'jistr/vim-nerdtree-tabs'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'vim-scripts/taglist.vim'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'mileszs/ack.vim'
-
-call neobundle#end()
-
-" Required:
-filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-
 " open window
-nnoremap <silent> <F2> :NERDTreeTabsToggle<CR>
-nnoremap <silent> <C-F2> :TlistToggle<CR>
-
+map <C-b> :NERDTreeToggle<CR>
 
 " Move focus among window/spilt
 nnoremap <silent> <F3> :tabp<CR>
@@ -93,10 +57,6 @@ nmap <silent> <S-Left> <C-o>
 nmap <silent> <S-Right> <C-i>
 nmap <silent> <S-h> <C-o>
 nmap <silent> <S-l> <C-i>
-
-" tag list
-let Tlist_Use_Right_Window = 1
-let Tlist_Exit_OnlyWindow = 1
 
 " nerdcommenter
 nmap <silent> <C-_> <leader>c<space>
