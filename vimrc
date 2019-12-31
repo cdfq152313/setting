@@ -1,3 +1,10 @@
+" install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdcommenter'
@@ -7,7 +14,6 @@ call plug#end()
 set encoding=utf-8
 set fileencodings=utf-8,cp950
 " 編輯喜好設定
-syntax on " 語法上色顯示
 set nocompatible " VIM 不使用和 VI 相容的模式
 "set ai           " 自動縮排
 set shiftwidth=4 " 設定縮排寬度 = 4
