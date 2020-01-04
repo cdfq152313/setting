@@ -4,7 +4,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX
 	brew tap dart-lang/dart
-	brew install dart git vim zsh
+	brew install dart git vim zsh ack
 fi
 
 curl -L git.io/antigen > ~/.antigen.zsh
