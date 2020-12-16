@@ -65,5 +65,5 @@ nmap <silent> <S-h> <C-o>
 nmap <silent> <S-l> <C-i>
 
 " nerdcommenter
-nmap <silent> <C-/> <leader>c<space>
-vmap <silent> <C-/> <leader>c<space>
+nmap <silent> <C-_> <leader>c<space>
+vmap <silent> <C-_> <leader>c<space>
