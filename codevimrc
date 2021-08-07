@@ -1,0 +1,11 @@
+" default setting
+set clipboard=unnamed
+
+" keymap
+nnoremap <leader>r :vsc editor.action.rename<cr>
+nnoremap <leader>f :vsc editor.action.formatDocument<cr>
+nnoremap <leader>b :vsc editor.debug.action.toggleBreakpoint<cr>
+
+" Delete not cut
+nnoremap <leader>d "_d
+xnoremap <leader>d "_d

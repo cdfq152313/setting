@@ -1,0 +1,32 @@
+" default setting
+set clipboard=unnamed
+" plugin
+set surround
+set NERDTree
+
+" keymap
+map <F2> :NERDTree<CR>
+map <S-F2> <Action>(SelectInProjectView)
+map <F3> <Action>(PreviousTab)
+map <F4> <Action>(NextTab)
+map <F5> <Action>(Run)
+map <F6> <Action>(Debug)
+map <F7> <Action>(Stop)
+
+" windows
+map <C-w> <Action>(CloseEditor)
+map <C-S-w> <Action>(CloseAllEditorsButActive)
+" mac
+map <D-w> <Action>(CloseEditor)
+map <D-S-w> <Action>(CloseAllEditorsButActive)
+
+map <leader>r <Action>(RenameElement)
+map <leader>b <Action>(ToggleLineBreakpoint)
+map <leader>f <Action>(ReformatCode)
+map <leader>o <Action>(OptimizeImports)
+map <leader>h <Action>(Vcs.ShowHistoryForBlock)
+map <S-Space> <Action>(GotoNextError)
+
+" Delete not cut
+nnoremap <leader>d "_d
+xnoremap <leader>d "_d

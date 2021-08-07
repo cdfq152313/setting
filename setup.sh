@@ -10,4 +10,5 @@ fi
 curl -L git.io/antigen > ~/.antigen.zsh
 
 ln -fs $(pwd)/vimrc ~/.vimrc
+ln -fs $(pwd)/ideavimrc ~/.ideavimrc
 ln -fs $(pwd)/zshrc ~/.zshrc

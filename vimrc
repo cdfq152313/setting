@@ -8,12 +8,14 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdcommenter'
+Plug 'tpope/vim-surround'
 call plug#end()
 
 " 檔案編碼
 set encoding=utf-8
 set fileencodings=utf-8,cp950
 " 編輯喜好設定
+set clipboard=unnamed "和外界共用剪貼簿
 set nocompatible " VIM 不使用和 VI 相容的模式
 "set ai           " 自動縮排
 set shiftwidth=4 " 設定縮排寬度 = 4
@@ -32,37 +34,21 @@ set confirm      " 操作過程有衝突時，以明確的文字來詢問
 set history=100  " 保留 100 個使用過的指令
 set laststatus=2
 colorscheme torte
-" copy paste to terminal
-nnoremap <silent> <F9> :set paste<CR>
 
 " open window
-map <C-b> :NERDTreeToggle<CR>
+map <F2> :NERDTreeToggle<CR>
 
 " Move focus among window/spilt
 nnoremap <silent> <F3> :tabp<CR>
 nnoremap <silent> <F4> :tabn<CR>
-nnoremap <silent> <A-h> :tabp<CR>
-nnoremap <silent> <A-l> :tabn<CR>
-nnoremap <silent> <A-Left> :tabp<CR>
-nnoremap <silent> <A-Right> :tabn<CR>
+nnoremap <silent> <S-Up> :wincmd k<CR>
+nnoremap <silent> <S-Down> :wincmd j<CR>
+nnoremap <silent> <S-Left> :wincmd h<CR>
+nnoremap <silent> <S-Right> :wincmd l<CR>
 
-nnoremap <silent> <C-F3> :wincmd h<CR>
-nnoremap <silent> <C-F4> :wincmd h<CR>
-nnoremap <silent> <C-Up> :wincmd k<CR>
-nnoremap <silent> <C-Down> :wincmd j<CR>
-nnoremap <silent> <C-Left> :wincmd h<CR>
-nnoremap <silent> <C-Right> :wincmd l<CR>
-nnoremap <silent> <C-k> :wincmd k<CR>
-nnoremap <silent> <C-j> :wincmd j<CR>
-nnoremap <silent> <C-h> :wincmd h<CR>
-nnoremap <silent> <C-l> :wincmd l<CR>
-
-nmap <silent> <S-F3> <C-o>
-nmap <silent> <S-F4> <C-i>
-nmap <silent> <S-Left> <C-o>
-nmap <silent> <S-Right> <C-i>
-nmap <silent> <S-h> <C-o>
-nmap <silent> <S-l> <C-i>
+" Delete not cut
+nnoremap <leader>d "_d
+xnoremap <leader>d "_d
 
 " nerdcommenter
 nmap <silent> <C-_> <leader>c<space>
