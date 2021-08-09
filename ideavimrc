@@ -1,31 +1,70 @@
 " default setting
-set clipboard=unnamed
+let mapleader=" "
+set number relativenumber
+set scrolloff=5
 " plugin
 set surround
 set NERDTree
 
-" keymap
-map <F2> :NERDTree<CR>
-map <S-F2> <Action>(SelectInProjectView)
-map <F3> <Action>(PreviousTab)
-map <F4> <Action>(NextTab)
-map <F5> <Action>(Run)
-map <F6> <Action>(Debug)
-map <F7> <Action>(Stop)
+" home/end/pageup/pagedown
+map <S-h> <Action>(EditorLineStart)
+map <S-l> <End>
+map <S-k> <PageUp>
+map <S-j> <PageDown>
 
-" windows
+" surround
+vmap <leader>q "zc"<C-R>z"<Esc>
+vmap ' "zc'<C-R>z'<Esc>
+vmap ( "zc(<C-R>z)<Esc>
+vmap [ "zc[<C-R>z]<Esc>
+vmap { "zc{<C-R>z}<Esc> 
+
+" next occurrence operation
+vmap <f> <Action>(SelectNextOccurrence)
+vmap <S-f> <Action>(UnselectPreviousOccurrence)
+vmap <g> <Action>(FindNext)
+vmap <S-g> <Action>(FindPrevious)
+
+" windows close tab
 map <C-w> <Action>(CloseEditor)
 map <C-S-w> <Action>(CloseAllEditorsButActive)
-" mac
-map <D-w> <Action>(CloseEditor)
-map <D-S-w> <Action>(CloseAllEditorsButActive)
+" mac close tab
+map <M-S-w> <Action>(CloseAllEditorsButActive)
 
+map <leader>a <Action>(Annotate)
 map <leader>r <Action>(RenameElement)
-map <leader>b <Action>(ToggleLineBreakpoint)
 map <leader>f <Action>(ReformatCode)
 map <leader>o <Action>(OptimizeImports)
 map <leader>h <Action>(Vcs.ShowHistoryForBlock)
+map <leader>g <Action>(Generate)
 map <S-Space> <Action>(GotoNextError)
+map <leader>i <Action>(EditorAddCaretPerSelectedLine)
+
+" build/run/debug
+map <leader>br <Action>(Run)
+map <leader>bd <Action>(Debug)
+map <leader>bs <Action>(Stop)
+map <leader>bb <Action>(ToggleLineBreakpoint)
+
+" show
+map <leader>sd <Action>(QuickJavaDoc)
+map <leader>se <Action>(ShowErrorDescription)
+
+" extract
+map <leader>ev <Action>(IntroduceVariable)
+map <leader>ec <Action>(IntroduceConstant)
+map <leader>ef <Action>(IntroduceField)
+map <leader>em <Action>(ExtractMethod)
+map <leader>ep <Action>(IntroduceParameter)
+map <leader>ei <Action>(Inline)
+
+" tool window action
+map <leader>wq <Action>(HideActiveWindow)
+map <leader>wp <Action>(ActivateProjectToolWindow)
+map <leader>wr <Action>(ActivateRunToolWindow)
+map <leader>wd <Action>(ActivateDebugToolWindow)
+map <leader>wt <Action>(ActivateTerminalToolWindow)
+" map <leader>we <Action>(ActivateDartAnalysisToolWindow)
 
 " Delete not cut
 nnoremap <leader>d "_d

@@ -11,12 +11,14 @@ Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
 call plug#end()
 
+" 改變leader key
+let mapleader = " "
 " 檔案編碼
 set encoding=utf-8
 set fileencodings=utf-8,cp950
 " 編輯喜好設定
-set clipboard=unnamed "和外界共用剪貼簿
 set nocompatible " VIM 不使用和 VI 相容的模式
+set scrolloff=5
 "set ai           " 自動縮排
 set shiftwidth=4 " 設定縮排寬度 = 4
 set tabstop=4    " tab 的字元數
@@ -27,6 +29,7 @@ set backspace=2  " 在 insert 也可用 backspace
 set ic           " 設定搜尋忽略大小寫
 set ru           " 第幾行第幾個字
 set nu           " 顯示行號
+set number relativenumber
 set hlsearch     " 設定高亮度顯示搜尋結果
 set incsearch    " 在關鍵字還沒完全輸入完畢前就顯示結果
 set smartindent  " 設定 smartindent
@@ -38,9 +41,15 @@ colorscheme torte
 " open window
 map <F2> :NERDTreeToggle<CR>
 
+" home/end/pageup/pagedown
+map <silent> <S-h> <Home> 
+map <silent> <S-l> <End>
+map <silent> <S-k> <PageUp>
+map <silent> <S-j> <PageDown>
+
 " Move focus among window/spilt
-nnoremap <silent> <F3> :tabp<CR>
-nnoremap <silent> <F4> :tabn<CR>
+nnoremap <silent> <A-Left> :tabp<CR>
+nnoremap <silent> <A-Right> :tabn<CR>
 nnoremap <silent> <S-Up> :wincmd k<CR>
 nnoremap <silent> <S-Down> :wincmd j<CR>
 nnoremap <silent> <S-Left> :wincmd h<CR>
@@ -53,3 +62,11 @@ xnoremap <leader>d "_d
 " nerdcommenter
 nmap <silent> <C-_> <leader>c<space>
 vmap <silent> <C-_> <leader>c<space>
+
+" surround
+vmap <leader>q "zc"<C-R>z"<Esc>
+vmap ' "zc'<C-R>z'<Esc>
+vmap ( "zc(<C-R>z)<Esc>
+vmap [ "zc[<C-R>z]<Esc>
+vmap { "zc{<C-R>z}<Esc>
+

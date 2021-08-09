@@ -1,5 +1,8 @@
-" default setting
-set clipboard=unnamed
+" home/end/pageup/pagedown
+map <S-h> <Home>
+map <S-l> <End>
+map <S-k> <PageUp>
+map <S-j> <PageDown>
 
 " keymap
 nnoremap <leader>r :vsc editor.action.rename<cr>
