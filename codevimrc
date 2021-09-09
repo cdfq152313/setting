@@ -1,14 +1,49 @@
 " home/end/pageup/pagedown
-map <S-h> <Home>
-map <S-l> <End>
-map <S-k> <PageUp>
-map <S-j> <PageDown>
+map H <Home>
+map L <End>
+noremap K <C-b>
+noremap J <C-f>
 
-" keymap
-nnoremap <leader>r :vsc editor.action.rename<cr>
-nnoremap <leader>f :vsc editor.action.formatDocument<cr>
-nnoremap <leader>b :vsc editor.debug.action.toggleBreakpoint<cr>
+" not copy action
+noremap D "_d
+noremap DD "_dd
+noremap C "_c
+noremap x "_x
+noremap X "_X
+noremap s "_s
+noremap S "_S
+vnoremap p pgvy
 
-" Delete not cut
-nnoremap <leader>d "_d
-xnoremap <leader>d "_d
+" search
+map / actions.find
+
+" surround
+vnoremap " "zc"<C-R>z"<Esc>
+vnoremap ' "zc'<C-R>z'<Esc>
+vnoremap ( "zc(<C-R>z)<Esc>
+vnoremap [ "zc[<C-R>z]<Esc>
+vnoremap { "zc{<C-R>z}<Esc>
+vmap a editor.action.smartSelect.expand
+vmap z editor.action.smartSelect.shrink
+
+" next occurrence operation
+vmap n editor.action.nextSelectionMatchFindAction
+vmap N editor.action.previousSelectionMatchFindAction
+vmap m editor.action.addSelectionToNextFindMatch
+vmap M cursorUndo
+
+" common action 
+map <leader>r editor.action.rename
+map <leader>f editor.action.formatDocument
+map <leader>o editor.action.organizeImports
+map <leader>s editor.action.showHover
+map <leader>q editor.action.quickFix
+
+" build/run/debug
+map <leader>dd workbench.action.debug.start
+map <leader>ds workbench.action.debug.stop
+map <leader>db editor.debug.action.toggleBreakpoint
+
+" easy motion
+noremap f <leader><leader>s
+noremap 2f <leader><leader>2s

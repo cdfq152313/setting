@@ -1,0 +1,8 @@
+source ~/setting/ideavimrc_common
+
+" close all tab
+map <M-S-w> <Action>(CloseAllEditorsButActive)
+
+" clone caret
+nmap <A-k> <Action>(EditorCloneCaretAbove)
+nmap <A-j> <Action>(EditorCloneCaretBelow)

@@ -1,54 +1,71 @@
 " default setting
 let mapleader=" "
-set number relativenumber
 set scrolloff=5
+
 " plugin
 set surround
-set NERDTree
+set ReplaceWithRegister
+set easymotion
 
 " home/end/pageup/pagedown
-map <S-h> <Action>(EditorLineStart)
-map <S-l> <End>
-map <S-k> <PageUp>
-map <S-j> <PageDown>
+map H <Action>(EditorLineStart)
+map L <End>
+map K <PageUp>
+map J <PageDown>
+
+" not copy action
+noremap D "_d
+noremap DD "_dd
+noremap C "_c
+noremap x "_x
+noremap X "_X
+noremap s "_s
+noremap S "_S
+vmap p gr
+
+" search
+map / <Action>(Find)
 
 " surround
-vmap <leader>q "zc"<C-R>z"<Esc>
-vmap ' "zc'<C-R>z'<Esc>
-vmap ( "zc(<C-R>z)<Esc>
-vmap [ "zc[<C-R>z]<Esc>
-vmap { "zc{<C-R>z}<Esc> 
+vnoremap " "zc"<C-R>z"<Esc>
+vnoremap ' "zc'<C-R>z'<Esc>
+vnoremap ( "zc(<C-R>z)<Esc>
+vnoremap [ "zc[<C-R>z]<Esc>
+vnoremap { "zc{<C-R>z}<Esc>
+vmap a <Action>(EditorSelectWord)
+vmap z <Action>(EditorUnSelectWord)
 
 " next occurrence operation
-vmap <f> <Action>(SelectNextOccurrence)
-vmap <S-f> <Action>(UnselectPreviousOccurrence)
-vmap <g> <Action>(FindNext)
-vmap <S-g> <Action>(FindPrevious)
+vmap n <Action>(FindNext)
+vmap N <Action>(FindPrevious)
+vmap m <Action>(SelectNextOccurrence)
+vmap M <Action>(UnselectPreviousOccurrence)
 
-" windows close tab
-map <C-w> <Action>(CloseEditor)
-map <C-S-w> <Action>(CloseAllEditorsButActive)
-" mac close tab
-map <M-S-w> <Action>(CloseAllEditorsButActive)
-
+" common action
 map <leader>a <Action>(Annotate)
 map <leader>r <Action>(RenameElement)
 map <leader>f <Action>(ReformatCode)
 map <leader>o <Action>(OptimizeImports)
 map <leader>h <Action>(Vcs.ShowHistoryForBlock)
 map <leader>g <Action>(Generate)
+map <leader>q <Action>(ShowIntentionActions)
 map <S-Space> <Action>(GotoNextError)
 map <leader>i <Action>(EditorAddCaretPerSelectedLine)
 
 " build/run/debug
-map <leader>br <Action>(Run)
-map <leader>bd <Action>(Debug)
-map <leader>bs <Action>(Stop)
-map <leader>bb <Action>(ToggleLineBreakpoint)
+map <leader>dr <Action>(Run)
+map <leader>dd <Action>(Debug)
+map <leader>ds <Action>(Stop)
+map <leader>db <Action>(ToggleLineBreakpoint)
+
+" code navigation
+map <leader>ni <Action>(GotoImplementation)
+map <leader>ns <Action>(GotoSuperMethod)
 
 " show
 map <leader>sd <Action>(QuickJavaDoc)
 map <leader>se <Action>(ShowErrorDescription)
+map <leader>sp <Action>(ParameterInfo)
 
 " extract
 map <leader>ev <Action>(IntroduceVariable)
@@ -60,12 +77,12 @@ map <leader>ei <Action>(Inline)
 
 " tool window action
 map <leader>wq <Action>(HideActiveWindow)
+map <leader>ws <Action>(FileStructurePopup)
 map <leader>wp <Action>(ActivateProjectToolWindow)
 map <leader>wr <Action>(ActivateRunToolWindow)
 map <leader>wd <Action>(ActivateDebugToolWindow)
 map <leader>wt <Action>(ActivateTerminalToolWindow)
 " map <leader>we <Action>(ActivateDartAnalysisToolWindow)
 
-" Delete not cut
-nnoremap <leader>d "_d
-xnoremap <leader>d "_d
+" easy motion
+map f <Plug>(easymotion-sn)

@@ -29,7 +29,6 @@ set backspace=2  " 在 insert 也可用 backspace
 set ic           " 設定搜尋忽略大小寫
 set ru           " 第幾行第幾個字
 set nu           " 顯示行號
-set number relativenumber
 set hlsearch     " 設定高亮度顯示搜尋結果
 set incsearch    " 在關鍵字還沒完全輸入完畢前就顯示結果
 set smartindent  " 設定 smartindent
@@ -42,10 +41,10 @@ colorscheme torte
 map <F2> :NERDTreeToggle<CR>
 
 " home/end/pageup/pagedown
-map <silent> <S-h> <Home> 
-map <silent> <S-l> <End>
-map <silent> <S-k> <PageUp>
-map <silent> <S-j> <PageDown>
+map <silent> S <Home>
+map <silent> L <End>
+map <silent> K <PageUp>
+map <silent> J <PageDown>
 
 " Move focus among window/spilt
 nnoremap <silent> <A-Left> :tabp<CR>
@@ -55,18 +54,23 @@ nnoremap <silent> <S-Down> :wincmd j<CR>
 nnoremap <silent> <S-Left> :wincmd h<CR>
 nnoremap <silent> <S-Right> :wincmd l<CR>
 
-" Delete not cut
-nnoremap <leader>d "_d
-xnoremap <leader>d "_d
+" not copy action
+noremap D "_d
+noremap DD "_dd
+noremap C "_c
+noremap x "_x
+noremap X "_X
+noremap s "_s
+noremap S "_S
+vnoremap p pgvy
 
 " nerdcommenter
 nmap <silent> <C-_> <leader>c<space>
 vmap <silent> <C-_> <leader>c<space>
 
 " surround
-vmap <leader>q "zc"<C-R>z"<Esc>
-vmap ' "zc'<C-R>z'<Esc>
-vmap ( "zc(<C-R>z)<Esc>
-vmap [ "zc[<C-R>z]<Esc>
-vmap { "zc{<C-R>z}<Esc>
-
+vnoremap " "zc"<C-R>z"<Esc>
+vnoremap ' "zc'<C-R>z'<Esc>
+vnoremap ( "zc(<C-R>z)<Esc>
+vnoremap [ "zc[<C-R>z]<Esc>
+vnoremap { "zc{<C-R>z}<Esc>
