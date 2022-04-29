@@ -63,16 +63,21 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 # Export
 # export PATH=/usr/local/bin:$PATH
-export PATH=$HOME/development/flutter/bin:$PATH
 export PATH=$HOME/bin:$PATH
-# export PATH=$HOME/.pub-cache/bin:$PATH
 
 # If Vim has error message 'Warning: Failed to set locale category LC_NUMERIC to en_TW.'. Uncomment it.
 # export LC_ALL=en_US.UTF-8
 
 # Alias
 alias gs="git status"
-alias fgen="flutter packages pub run build_runner build  --delete-conflicting-outputs"
-alias fget="flutter packages pub get"
-# alias tget="tool/get"
-# alias tgen="tool/gen"
+alias adb=$HOME/Android/Sdk/platform-tools/adb
+case `uname` in
+  #Darwin)
+	#alias cdh="cd /mnt/c/Users/cdfq1"
+  #;;
+  Linux)
+	alias cdh="cd /mnt/c/Users/cdfq1"
+	alias dotnet="dotnet.exe"
+	alias ds="dotnet-script.exe"
+  ;;
+esac
