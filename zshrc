@@ -81,3 +81,7 @@ case `uname` in
 	alias ds="dotnet-script.exe"
   ;;
 esac
+
+function win() {
+	source $HOME/setting/win.zsh
+}
