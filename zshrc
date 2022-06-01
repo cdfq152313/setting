@@ -62,8 +62,7 @@ zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
 # Export
-# export PATH=/usr/local/bin:$PATH
-export PATH=$HOME/bin:$PATH
+#export PATH=$HOME/bin:$PATH
 
 # If Vim has error message 'Warning: Failed to set locale category LC_NUMERIC to en_TW.'. Uncomment it.
 # export LC_ALL=en_US.UTF-8
