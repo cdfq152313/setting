@@ -1,11 +1,12 @@
 set -x
+# install package
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	sudo apt install vim ack-grep htop curl zsh
+	sudo apt install vim zsh unzip build-essential 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    # Mac OSX
-	brew tap dart-lang/dart
-	brew install dart git vim zsh ack
+	brew install vim zsh git
 fi
+brew tap leoafarias/fvm
+brew install fvm repo ack htop
 
 curl -L git.io/antigen > ~/.antigen.zsh
 
