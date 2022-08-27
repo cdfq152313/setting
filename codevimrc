@@ -36,7 +36,8 @@ vmap M cursorUndo
 map <leader>r editor.action.rename
 map <leader>f editor.action.formatDocument
 map <leader>o editor.action.organizeImports
-map <leader>s editor.action.showHover
+map <leader>sd editor.action.showHover
+map <leader>sf outline.focus
 map <leader>q editor.action.quickFix
 
 " build/run/debug

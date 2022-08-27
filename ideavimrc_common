@@ -64,6 +64,7 @@ map <leader>ns <Action>(GotoSuperMethod)
 
 " show
 map <leader>sd <Action>(QuickJavaDoc)
+map <leader>sf <Action>(ActivateStructureToolWindow)
 map <leader>se <Action>(ShowErrorDescription)
 map <leader>sp <Action>(ParameterInfo)
 
@@ -77,7 +78,6 @@ map <leader>ei <Action>(Inline)
 
 " tool window action
 map <leader>wq <Action>(HideActiveWindow)
-map <leader>ws <Action>(FileStructurePopup)
 map <leader>wp <Action>(ActivateProjectToolWindow)
 map <leader>wr <Action>(ActivateRunToolWindow)
 map <leader>wd <Action>(ActivateDebugToolWindow)
