@@ -78,6 +78,8 @@ case `uname` in
 	alias cdh="cd /mnt/c/Users/cdfq1"
 	alias dotnet="dotnet.exe"
 	alias ds="dotnet-script.exe"
+	alias choco="choco.exe"
+	alias gchoco="gsudo choco.exe"
   ;;
 esac
 
