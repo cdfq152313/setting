@@ -1,5 +1,5 @@
 " home/end/pageup/pagedown
-map H <Home>
+map H cursorHome
 map L <End>
 noremap K <C-b>
 noremap J <C-f>
@@ -38,6 +38,7 @@ map <leader>f editor.action.formatDocument
 map <leader>o editor.action.organizeImports
 map <leader>sd editor.action.showHover
 map <leader>sf outline.focus
+map <leader>h gitlens.views.lineHistory.focus
 map <leader>q editor.action.quickFix
 
 " build/run/debug
@@ -45,6 +46,8 @@ map <leader>dd workbench.action.debug.start
 map <leader>ds workbench.action.debug.stop
 map <leader>db editor.debug.action.toggleBreakpoint
 
-" easy motion
-noremap f <leader><leader>s
-noremap 2f <leader><leader>2s
+" code navigation
+map <leader>ne editor.action.marker.nextInFiles
+
+" acejump
+map f extension.aceJump.multiChar
