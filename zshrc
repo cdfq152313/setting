@@ -1,73 +1,70 @@
-# antigen: https://github.com/zsh-users/antigen
-source $HOME/.antigen.zsh
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-# Load the oh-my-zsh's library.
-antigen use oh-my-zsh
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
 
-# Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen bundle git
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-autosuggestions
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Load the theme.
-antigen theme gallois
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
 
-# Tell Antigen that you're done.
-antigen apply
+# Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Execution time (only avaliable in gallois)
-function preexec() {
-	timer=${timer:-$SECONDS}
-}
+# zsh plugin
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-history-substring-search
+zinit light zdharma-continuum/fast-syntax-highlighting
+zinit load djui/alias-tips
 
-function precmd() {
-	if [ $timer ]; then
-		elapsed_s=$(($SECONDS - $timer))
-		if [[ $elapsed_s -ge 30 ]]; then
-			local -ri s=$(( elapsed_s%60 ))
-			local -ri m=$(( (elapsed_s/60)%60 ))
-			local -ri h=$(( (elapsed_s/3600)%24 ))
-			local -ri d=$(( elapsed_s/86400 ))
-			if (( d > 0 )); then
-				timer_show="${d}d${h}h"
-			elif (( h > 0 )); then
-				timer_show="${h}h${m}m"
-			elif (( m > 0 )); then
-				timer_show="${m}m${s}s"
-			else
-				timer_show="${s}s"
-			fi
-			RPS1="\$(git_custom_status)\$(ruby_prompt_info) %{$fg[red]%}(${timer_show})%f"
-		else
-			RPS1="\$(git_custom_status)\$(ruby_prompt_info)"
-		fi
-		unset timer
-	else
-		RPS1="\$(git_custom_status)\$(ruby_prompt_info)"
-	fi
-}
+# Oh My Zsh feature 
+zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/history.zsh
+zinit snippet OMZ::lib/key-bindings.zsh
+zinit snippet OMZ::lib/theme-and-appearance.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-# This speeds up pasting w/ autosuggest
-# https://github.com/zsh-users/zsh-autosuggestions/issues/238
-pasteinit() {
-  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
-  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
-}
+# key binding
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
-pastefinish() {
-  zle -N self-insert $OLD_SELF_INSERT
-}
-zstyle :bracketed-paste-magic paste-init pasteinit
-zstyle :bracketed-paste-magic paste-finish pastefinish
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+### End of Zinit's installer chunk
+
+# zoxide
+eval "$(zoxide init zsh)"
 
 # Export
-#export PATH=$HOME/bin:$PATH
+export PATH=$HOME/.pub-cache/bin:$PATH
+export JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@17
 
 # If Vim has error message 'Warning: Failed to set locale category LC_NUMERIC to en_TW.'. Uncomment it.
 # export LC_ALL=en_US.UTF-8
 
 # Alias
+alias ls="exa"
+alias l="exa -al"
 alias gs="git status"
 alias adb=$HOME/Android/Sdk/platform-tools/adb
 case `uname` in
@@ -86,3 +83,4 @@ esac
 function win() {
 	source $HOME/setting/win.zsh
 }
+
