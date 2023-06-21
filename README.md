@@ -31,8 +31,7 @@ ln -fs $PWD/vimrc ~/.vimrc
 
 ## zshrc
 
-- [antigen](https://github.com/zsh-users/antigen): zsh套件管理器。
-- [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh): zsh主題。
+- [zinit](https://github.com/zdharma-continuum/zinit): zsh套件管理器。
 - [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting): 輸入指令時提示指令有無錯誤。
 - [zsh-completions](https://github.com/zsh-users/zsh-completions): 遺漏的自動補完。
 - [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): 指令輸入建議。

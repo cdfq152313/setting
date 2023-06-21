@@ -13,6 +13,13 @@ map L <End>
 map K <PageUp>
 map J <PageDown>
 
+" Run
+map <F5> <Action>(Debug)
+if &ide =~? 'JetBrains Rider'
+    map <F4> <Action>(RiderUnitTestRunContextAction)
+    map <S-F4> <Action>(RiderUnitTestDebugContextAction)
+endif
+
 " not copy action
 noremap D "_d
 noremap DD "_dd
@@ -45,6 +52,7 @@ vmap M <Action>(UnselectPreviousOccurrence)
 map <leader>a <Action>(Annotate)
 map <leader>r <Action>(RenameElement)
 map <leader>f <Action>(ReformatCode)
+au FileType cs map <leader>f <Action>(com.intellij.csharpier.ReformatWithCSharpierAction)
 map <leader>o <Action>(OptimizeImports)
 map <leader>h <Action>(Vcs.ShowHistoryForBlock)
 map <leader>g <Action>(Generate)
@@ -64,7 +72,7 @@ map <leader>ns <Action>(GotoSuperMethod)
 
 " show
 map <leader>sd <Action>(QuickJavaDoc)
-map <leader>sf <Action>(ActivateStructureToolWindow)
+map <leader>ss <Action>(ActivateStructureToolWindow)
 map <leader>se <Action>(ShowErrorDescription)
 map <leader>sp <Action>(ParameterInfo)
 
@@ -78,11 +86,17 @@ map <leader>ei <Action>(Inline)
 
 " tool window action
 map <leader>wq <Action>(HideActiveWindow)
-map <leader>wp <Action>(ActivateProjectToolWindow)
+map <leader>wf <Action>(ActivateProjectToolWindow)
+map <leader>wg <Action>(ActivateCommitToolWindow)
+map <leader>ws <Action>(ActivateStructureToolWindow)
 map <leader>wr <Action>(ActivateRunToolWindow)
 map <leader>wd <Action>(ActivateDebugToolWindow)
 map <leader>wt <Action>(ActivateTerminalToolWindow)
-" map <leader>we <Action>(ActivateDartAnalysisToolWindow)
+if &ide =~? 'JetBrains Rider'
+    map <leader>we <Action>(Rider.ProblemsView.ErrorsInSolution)
+elseif &ide =~? 'webstorm'
+    map <leader>we <Action>(ActivateDartAnalysisToolWindow)
+endif
 
 " easy motion
 map f <Plug>(easymotion-sn)
