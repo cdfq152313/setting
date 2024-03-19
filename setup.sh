@@ -15,6 +15,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	ln -fs $(pwd)/ideavimrc_mac ~/.ideavimrc
 fi 
 ln -fs $(pwd)/zshrc ~/.zshrc
+ln -fs $(pwd)/zimrc ~/.zimrc
 ln -fs $(pwd)/p10k.zsh ~/.p10k.zsh
 
-echo 'Restart your terminal and execute `zinit self-update` to apply zsh config'
+echo 'Restart your terminal and execute `zimfw install` to apply zsh config'
