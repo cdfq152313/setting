@@ -57,7 +57,8 @@ eval "$(zoxide init zsh)"
 
 # Export
 export PATH=$HOME/.pub-cache/bin:$PATH
-export JAVA_HOME=/home/linuxbrew/.linuxbrew/opt/openjdk@17
+export PATH=$HOME/.jenv/bin:$PATH
+eval "$(jenv init -)"
 
 # If Vim has error message 'Warning: Failed to set locale category LC_NUMERIC to en_TW.'. Uncomment it.
 # export LC_ALL=en_US.UTF-8
@@ -84,3 +85,10 @@ function win() {
 	source $HOME/setting/win.zsh
 }
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Created by `pipx` on 2024-02-01 06:08:16
+export PATH="$PATH:/home/denny/.local/bin"
