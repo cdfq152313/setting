@@ -11,7 +11,8 @@
 # Sets sane Zsh built-in environment options.
 zmodule environment
 # Provides handy git aliases and functions.
-zmodule git
+#zmodule git
+zmodule ohmyzsh/ohmyzsh --root plugins/git
 # Applies correct bindkeys for input events.
 zmodule input
 # Sets a custom terminal title.
@@ -54,5 +55,8 @@ zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh.
 zmodule zsh-users/zsh-autosuggestions
+# alias suggestion
+zmodule djui/alias-tips
+
 # }}} End configuration added by Zim install
 

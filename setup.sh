@@ -1,9 +1,9 @@
 set -x
 # install package
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	sudo apt install vim zsh unzip build-essential 
+	sudo apt install neovim vim zsh unzip build-essential 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-	brew install vim zsh
+	brew install neovim vim zsh
 fi
 brew tap leoafarias/fvm
 brew install git git-gui repo htop fvm ripgrep exa bat zoxide fzf
