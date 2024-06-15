@@ -12,7 +12,7 @@ bash -c "$(curl --fail --show-error --silent --location https://raw.githubuserco
 
 mkdir -p ~/.config/nvim
 ln -fs $(pwd)/vimrc ~/.vimrc
-ln -fs $(pwd)/vimrc ~/.config/nvim/init.vim
+ln -fs $(pwd)/vscodenvim.vim ~/.config/nvim/init.vim
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	ln -fs $(pwd)/ideavimrc_mac ~/.ideavimrc
 fi 
