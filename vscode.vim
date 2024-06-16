@@ -26,7 +26,7 @@ vnoremap { "zc{<C-R>z}<Esc>
 vmap a editor.action.smartSelect.expand
 vmap z editor.action.smartSelect.shrink
 
-" next occurrence operation
+" multiple cursor
 vmap n editor.action.moveSelectionToNextFindMatch
 vmap N editor.action.moveSelectionToPreviousFindMatch
 vmap m editor.action.addSelectionToNextFindMatch
@@ -49,5 +49,13 @@ map <leader>db editor.debug.action.toggleBreakpoint
 " code navigation
 map <leader>ne editor.action.marker.nextInFiles
 
-" acejump
+" easy motion
 map f extension.aceJump.multiChar
+
+" split window
+nmap <tab> workbench.action.focusNextGroup
+nmap <leader>\ workbench.action.splitEditorToRightGroup
+nmap \ workbench.action.moveEditorToRightGroup
+nmap | workbench.action.moveEditorToLeftGroup
+nmap - workbench.action.moveEditorToBelowGroup
+nmap _ workbench.action.moveEditorToAboveGroup

@@ -14,7 +14,7 @@ mkdir -p ~/.config/nvim
 ln -fs $(pwd)/vimrc ~/.vimrc
 ln -fs $(pwd)/vscodenvim.vim ~/.config/nvim/init.vim
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	ln -fs $(pwd)/ideavimrc_mac ~/.ideavimrc
+	ln -fs $(pwd)/idea_mac.vim ~/.ideavimrc
 fi 
 ln -fs $(pwd)/zshrc ~/.zshrc
 ln -fs $(pwd)/zimrc ~/.zimrc

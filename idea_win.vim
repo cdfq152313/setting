@@ -7,7 +7,3 @@ map <C-[> <Action>(Back)
 map <C-]> <Action>(Forward)
 map <C-S-[> <Action>(PreviousTab)
 map <C-S-]> <Action>(NextTab)
-
-" clone caret
-nmap <C-k> <Action>(EditorCloneCaretAbove)
-nmap <C-j> <Action>(EditorCloneCaretBelow)

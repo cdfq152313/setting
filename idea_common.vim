@@ -47,7 +47,9 @@ vnoremap { "zc{<C-R>z}<Esc>
 vmap a <Action>(EditorSelectWord)
 vmap z <Action>(EditorUnSelectWord)
 
-" next occurrence operation
+" multiple cursor
+nmap <A-k> <Action>(EditorCloneCaretAbove)
+nmap <A-j> <Action>(EditorCloneCaretBelow)
 vmap n <Action>(FindNext)
 vmap N <Action>(FindPrevious)
 vmap m <Action>(SelectNextOccurrence)
@@ -74,16 +76,23 @@ map <leader>db <Action>(ToggleLineBreakpoint)
 map <leader>ni <Action>(GotoImplementation)
 map <leader>ns <Action>(GotoSuperMethod)
 
+" easy motion
+map f <Plug>(easymotion-sn)
+
+" split left/right shrink
+nmap <tab> <Action>(NextSplitter)
+nmap \ <Action>(MoveTabRight)
+nmap <leader>\ <Action>(OpenInRightSplit)
+nmap <S-\> <Action>(Unsplit)
+nmap - <Action>(MoveTabDown)
+nmap _ <Action>(Unsplit)
+
 " show
 map <leader>sd <Action>(QuickJavaDoc)
 map <leader>sf <Action>(FileStructurePopup)
 map <leader>se <Action>(ShowErrorDescription)
 map <leader>sp <Action>(ParameterInfo)
 
-" split left/right shrink
-map <leader>sr <Action>(OpenInRightSplit)
-map <leader>st <Action>(NextSplitter)
-map <leader>ss <Action>(UnsplitAll)
 
 " extract
 map <leader>ev <Action>(IntroduceVariable)
@@ -107,6 +116,3 @@ if &ide =~? 'JetBrains Rider'
 elseif &ide =~? 'webstorm'
     map <leader>we <Action>(ActivateDartAnalysisToolWindow)
 endif
-
-" easy motion
-map f <Plug>(easymotion-sn)
