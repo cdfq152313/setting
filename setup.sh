@@ -13,7 +13,9 @@ bash -c "$(curl --fail --show-error --silent --location https://raw.githubuserco
 mkdir -p ~/.config/nvim
 ln -fs $(pwd)/vimrc ~/.vimrc
 ln -fs $(pwd)/vscodenvim.vim ~/.config/nvim/init.vim
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	ln -fs $(pwd)/idea_win.vim ~/.ideavimrc
+elif [[ "$OSTYPE" == "darwin"* ]]; then
 	ln -fs $(pwd)/idea_mac.vim ~/.ideavimrc
 fi 
 ln -fs $(pwd)/zshrc ~/.zshrc

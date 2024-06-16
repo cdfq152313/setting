@@ -1,3 +1,5 @@
+source ~/setting/idea_common.vim
+
 " windows close tab
 map <C-w> <Action>(CloseEditor)
 map <C-S-w> <Action>(CloseAllEditorsButActive)
