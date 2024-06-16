@@ -11,9 +11,9 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'vscode-neovim/vscode-multi-cursor.nvim', Cond(exists('g:vscode'))
 call plug#end()
 
 let mapleader=" "
@@ -31,14 +31,17 @@ noremap s "_s
 vnoremap p pgvy
 
 if exists('g:vscode')
-  let code = v:lua.require("vscode")
+  let code = v:lua.require('vscode')
   " common action
-  map <leader>r  <cmd>call code.call('editor.action.rename')<cr>
+  map <leader>r <cmd>call code.call('editor.action.rename')<cr>
   map <leader>f <cmd>call code.call('editor.action.formatDocument')<cr>
   map <leader>o <cmd>call code.call('editor.action.organizeImports')<cr>
-  map <leader>sd <cmd>call code.call('editor.action.showHover')<cr>
-  map <leader>sf <cmd>call code.call('outline.focus')<cr>
+  map <leader>s <cmd>call code.call('editor.action.showHover')<cr>
   map <leader>h <cmd>call code.call('gitlens.views.lineHistory.focus')<cr>
   map <leader>q <cmd>call code.call('editor.action.quickFix')<cr>
+  
+  " multiple cursor
+  let mc = v:lua.require('vscode-multi-cursor')
+  vmap m <cmd>call mc.addSelectionToNextFindMatch()<cr>
 
 endif
