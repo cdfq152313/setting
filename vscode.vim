@@ -37,7 +37,6 @@ map <leader>a gitlens.toggleFileBlame
 map <leader>r editor.action.rename
 map <leader>f editor.action.formatDocument
 map <leader>o editor.action.organizeImports
-map <leader>s editor.action.showHover
 map <leader>h gitlens.views.lineHistory.focus
 map <leader>q editor.action.quickFix
 
@@ -59,3 +58,7 @@ nmap \ workbench.action.moveEditorToRightGroup
 nmap | workbench.action.moveEditorToLeftGroup
 nmap - workbench.action.moveEditorToBelowGroup
 nmap _ workbench.action.moveEditorToAboveGroup
+
+" show
+map <leader>sd editor.action.showHover
+map <leader>sf outline.focus
