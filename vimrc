@@ -23,14 +23,22 @@ call plug#end()
 " 改變leader key
 let mapleader = " "
 
-" open window
-map <F2> :NERDTreeToggle<CR>
+" NerdTree
+nnoremap <F2> :NERDTreeToggle<CR>
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
+nmap <silent> <F3> :wincmd h<CR>
+nmap <silent> <F4> :wincmd l<CR>
+nnoremap <F5> :tabprevious<CR>
+nnoremap <F6> :tabnext<CR>
 
 " home/end/pageup/pagedown
 map <silent> H ^
 map <silent> L $
-map <silent> K <PageUp>
-map <silent> J <PageDown>
+noremap K {
+noremap J }
 
 " Move focus among window/spilt
 nnoremap <silent> <A-Left> :tabp<CR>
