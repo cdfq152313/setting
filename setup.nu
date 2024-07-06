@@ -15,7 +15,7 @@ def "main sdk" [] {
         }
         "macos" => {
             brew_essential
-            brew install docker
+            brew install --cask docker
             brew install --cask visual-studio-code
             brew install --cask jetbrains-toolbox
         }
@@ -47,7 +47,7 @@ def "main shell" [] {
     match $nu.os-info.name {
         "windows" => { 
             choco install starship
-            echo "source ~/setting/env.nu" | save -f $nu.env-path
+            echo $"source ($env.PWD)\\env.nu" | save -f $nu.env-path
         }
         _ => { 
             brew install starship
