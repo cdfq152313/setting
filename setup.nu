@@ -1,5 +1,5 @@
 
-def install_sdk [] {
+def "main sdk" [] {
     def brew_essential [] {
         brew install vim git fvm pyenv pipx
         pipx ensurepath
@@ -9,7 +9,6 @@ def install_sdk [] {
     match $nu.os-info.name {
         "windows" => { 
             choco install vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox
-            choco install starship
         }
         "linux" => { 
             brew_essential
@@ -24,7 +23,7 @@ def install_sdk [] {
 }
 
 
-def link [] {
+def "main vim" [] {
     match $nu.os-info.name {
         "windows" => {
             mkdir ~/vimfiles/autoload/ 
@@ -43,15 +42,18 @@ def link [] {
     }
 }
 
-def shell [] {
+def "main shell" [] {
+    git submodule update --recursive --remote
     match $nu.os-info.name {
         "windows" => { 
-            echo "source ~/setting/config.nu" | save -f $nu.config-path
+            choco install starship
+            echo "source ~/setting/env.nu" | save -f $nu.env-path
         }
         _ => { 
-
+            brew install starship
+            ln -fs $"($env.PWD)/env.nu" $nu.env-path
         }
     }
 } 
 
-shell
+def main [] {}
