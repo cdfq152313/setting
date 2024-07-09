@@ -43,7 +43,7 @@ def "main vim" [] {
 }
 
 def "main shell" [] {
-    git submodule update --recursive --remote
+    git submodule update --recursive --remote --init
     match $nu.os-info.name {
         "windows" => { 
             choco install starship
