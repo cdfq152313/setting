@@ -17,7 +17,6 @@ if has("win32")
 else
   call plug#begin('~/.vim/plugged')
 endif
-Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
@@ -25,6 +24,20 @@ if has('nvim')
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 endif
 call plug#end()
+
+" 編輯喜好設定
+set scrolloff=5
+set shiftwidth=4 " 設定縮排寬度 = 4
+set tabstop=4    " tab 的字元數
+set expandtab    " 用 space 代替 tab
+set ic           " 設定搜尋忽略大小寫
+set ru           " 第幾行第幾個字
+set nu           " 顯示行號
+set incsearch    " 在關鍵字還沒完全輸入完畢前就顯示結果
+set smartindent  " 設定 smartindent
+set confirm      " 操作過程有衝突時，以明確的文字來詢問
+set history=100  " 保留 100 個使用過的指令
+colorscheme torte
 
 " 改變leader key
 let mapleader = " "
