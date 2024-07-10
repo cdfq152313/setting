@@ -90,4 +90,4 @@ source ~/setting/nu_scripts/custom-completions/rustup/rustup-completions.nu
 source ~/setting/nu_scripts/custom-completions/scoop/scoop-completions.nu
 source ~/setting/nu_scripts/custom-completions/tar/tar-completions.nu
 source ~/setting/nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
-source ~/setting/ssh-completions.nu
+source ~/setting/nu_scripts/custom-completions/ssh/ssh-completions.nu
