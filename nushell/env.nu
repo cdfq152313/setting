@@ -91,3 +91,5 @@ source nu_scripts/custom-completions/scoop/scoop-completions.nu
 source nu_scripts/custom-completions/tar/tar-completions.nu
 source nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
 source nu_scripts/custom-completions/ssh/ssh-completions.nu
+
+source zoxide.nu
