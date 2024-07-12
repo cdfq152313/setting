@@ -46,8 +46,8 @@ def "main vim" [] {
 
 def "main shell" [] {
     git submodule update --recursive --remote --init
-    nu --env-config ($env.PWD | path join 'nushell' 'env.nu' )
-    nu --config ($env.PWD | path join 'nushell' 'config.nu' )
+    echo $"source ($env.PWD | path join 'nushell' 'env.nu' )" | save -f $nu.env-path
+    echo $"source ($env.PWD | path join 'nushell' 'config.nu' )" | save -f $nu.config-path
 } 
 
 def main [] {}
