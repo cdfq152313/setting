@@ -46,17 +46,8 @@ def "main vim" [] {
 
 def "main shell" [] {
     git submodule update --recursive --remote --init
-    rm $nu.env-path $nu.config-path 
-    match $nu.os-info.name {
-        "windows" => { 
-            echo $"source ($env.PWD)\\nushell\\env.nu" | save -f $nu.env-path
-            echo $"source ($env.PWD)\\nushell\\config.nu" | save -f $nu.config-path
-        }
-        _ => { 
-            ln -fs $"($env.PWD)/nushell/env.nu" $nu.env-path
-            ln -fs $"($env.PWD)/nushell/config.nu" $nu.config-path
-        }
-    }
+    nu --env-config ($env.PWD | path join 'nushell' 'env.nu' )
+    nu --config ($env.PWD | path join 'nushell' 'config.nu' )
 } 
 
 def main [] {}
