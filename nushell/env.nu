@@ -9,7 +9,7 @@ if $nu.os-info.name == "linux" {
 }
 
 # Shell prompt
-$env.STARSHIP_CONFIG = ([$nu.home-path 'setting' 'starship.toml'] | path join)
+$env.STARSHIP_CONFIG = ([$nu.home-path 'setting' 'nushell' 'starship.toml'] | path join)
 export-env { $env.STARSHIP_SHELL = "nu"; load-env {
     STARSHIP_SESSION_KEY: (random chars -l 16)
     PROMPT_MULTILINE_INDICATOR: (
@@ -74,20 +74,20 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # Alias
-source ~/setting/nushell/nu_scripts/aliases/git/git-aliases.nu
+source nu_scripts/aliases/git/git-aliases.nu
 alias gs = git status
 alias vi = vim
 
 # Auto-completions
-source ~/setting/nushell/nu_scripts/custom-completions/curl/curl-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/docker/docker-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/flutter/flutter-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/git/git-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/less/less-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/make/make-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/npm/npm-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/rustup/rustup-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/scoop/scoop-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/tar/tar-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
-source ~/setting/nushell/nu_scripts/custom-completions/ssh/ssh-completions.nu
+source nu_scripts/custom-completions/curl/curl-completions.nu
+source nu_scripts/custom-completions/docker/docker-completions.nu
+source nu_scripts/custom-completions/flutter/flutter-completions.nu
+source nu_scripts/custom-completions/git/git-completions.nu
+source nu_scripts/custom-completions/less/less-completions.nu
+source nu_scripts/custom-completions/make/make-completions.nu
+source nu_scripts/custom-completions/npm/npm-completions.nu
+source nu_scripts/custom-completions/rustup/rustup-completions.nu
+source nu_scripts/custom-completions/scoop/scoop-completions.nu
+source nu_scripts/custom-completions/tar/tar-completions.nu
+source nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
+source nu_scripts/custom-completions/ssh/ssh-completions.nu
