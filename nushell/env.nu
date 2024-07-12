@@ -74,20 +74,20 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # Alias
-source ~/setting/nu_scripts/aliases/git/git-aliases.nu
+source ~/setting/nushell/nu_scripts/aliases/git/git-aliases.nu
 alias gs = git status
 alias vi = vim
 
 # Auto-completions
-source ~/setting/nu_scripts/custom-completions/curl/curl-completions.nu
-source ~/setting/nu_scripts/custom-completions/docker/docker-completions.nu
-source ~/setting/nu_scripts/custom-completions/flutter/flutter-completions.nu
-source ~/setting/nu_scripts/custom-completions/git/git-completions.nu
-source ~/setting/nu_scripts/custom-completions/less/less-completions.nu
-source ~/setting/nu_scripts/custom-completions/make/make-completions.nu
-source ~/setting/nu_scripts/custom-completions/npm/npm-completions.nu
-source ~/setting/nu_scripts/custom-completions/rustup/rustup-completions.nu
-source ~/setting/nu_scripts/custom-completions/scoop/scoop-completions.nu
-source ~/setting/nu_scripts/custom-completions/tar/tar-completions.nu
-source ~/setting/nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
-source ~/setting/nu_scripts/custom-completions/ssh/ssh-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/curl/curl-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/docker/docker-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/flutter/flutter-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/git/git-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/less/less-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/make/make-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/npm/npm-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/rustup/rustup-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/scoop/scoop-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/tar/tar-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
+source ~/setting/nushell/nu_scripts/custom-completions/ssh/ssh-completions.nu
