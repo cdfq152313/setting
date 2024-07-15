@@ -6,6 +6,7 @@
 use std "path add"
 if $nu.os-info.name == "linux" {
     path add /home/linuxbrew/.linuxbrew/bin 
+    path add /home/denny/.local/bin
 }
 
 # Shell prompt

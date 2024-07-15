@@ -48,6 +48,11 @@ def "main shell" [] {
     git submodule update --recursive --remote --init
     echo $"source ($env.PWD | path join 'nushell' 'env.nu' )" | save -f $nu.env-path
     echo $"source ($env.PWD | path join 'nushell' 'config.nu' )" | save -f $nu.config-path
+    if $nu.os-info.name != "windows" {
+        ln -fs $"($env.PWD)/zsh/zshrc" ~/.zshrc
+        ln -fs $"($env.PWD)/zsh/zimrc" ~/.zimrc
+        ln -fs $"($env.PWD)/zsh/p10k.zsh" ~/.p10k.zsh
+    }
 } 
 
 def main [] {}
