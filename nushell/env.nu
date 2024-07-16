@@ -4,10 +4,19 @@
 
 # Environment variables
 use std "path add"
-if $nu.os-info.name == "linux" {
-    path add /home/linuxbrew/.linuxbrew/bin 
-    path add /home/denny/.local/bin
+match $nu.os-info.name {
+    "windows" => {
+    }
+    "linux" => {
+        path add /home/linuxbrew/.linuxbrew/bin
+        path add /home/denny/.local/bin
+    }
+    "macos" => {
+        path add /opt/homebrew/bin
+    }
 }
+# Change shell LANG
+$env.LANG = "en_US.UTF-8"
 
 # Shell prompt
 $env.STARSHIP_CONFIG = ([$nu.home-path 'setting' 'nushell' 'starship.toml'] | path join)
