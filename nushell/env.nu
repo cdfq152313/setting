@@ -9,7 +9,7 @@ match $nu.os-info.name {
     }
     "linux" => {
         path add /home/linuxbrew/.linuxbrew/bin
-        path add /home/denny/.local/bin
+        path add ~/.local/bin
     }
     "macos" => {
         path add /opt/homebrew/bin
@@ -87,6 +87,7 @@ $env.NU_PLUGIN_DIRS = [
 source nu_scripts/aliases/git/git-aliases.nu
 alias gs = git status
 alias vi = vim
+alias cat = bat
 
 # Auto-completions
 source nu_scripts/custom-completions/curl/curl-completions.nu

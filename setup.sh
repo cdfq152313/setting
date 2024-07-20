@@ -1,6 +1,6 @@
 set -x
 # install package
-sudo apt install git vim zsh unzip build-essential htop	
+sudo apt install git vim zsh unzip build-essential htop
 
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 

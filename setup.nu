@@ -1,14 +1,14 @@
 
 def "main sdk" [] {
     def brew_essential [] {
-        brew install vim git fvm pyenv pipx starship
+        brew install vim git fvm pyenv pipx starship zoxide bat
         pipx ensurepath
         pipx install poetry
     }
 
     match $nu.os-info.name {
         "windows" => { 
-            choco install vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship
+            choco install vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide
         }
         "linux" => { 
             brew_essential
