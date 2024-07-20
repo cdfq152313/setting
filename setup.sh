@@ -1,25 +1,12 @@
 set -x
 # install package
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	sudo apt install neovim vim zsh unzip build-essential 
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-	brew install neovim vim zsh
-fi
-brew tap leoafarias/fvm
-brew install git git-gui repo htop fvm ripgrep exa bat zoxide fzf
+sudo apt install git vim zsh unzip build-essential htop	
 
-bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 
-mkdir -p ~/.config/nvim
-ln -fs $(pwd)/vimrc ~/.vimrc
-ln -fs $(pwd)/vscodenvim.vim ~/.config/nvim/init.vim
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	ln -fs $(pwd)/idea_win.vim ~/.ideavimrc
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-	ln -fs $(pwd)/idea_mac.vim ~/.ideavimrc
-fi 
-ln -fs $(pwd)/zshrc ~/.zshrc
-ln -fs $(pwd)/zimrc ~/.zimrc
-ln -fs $(pwd)/p10k.zsh ~/.p10k.zsh
+ln -fs $(pwd)/vim/vim.vim ~/.vimrc
+ln -fs $(pwd)/zsh/zshrc ~/.zshrc
+ln -fs $(pwd)/zsh/zimrc ~/.zimrc
+ln -fs $(pwd)/zsh/p10k.zsh ~/.p10k.zsh
 
 echo 'Restart your terminal and execute `zimfw install` to apply zsh config'
