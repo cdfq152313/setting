@@ -14,6 +14,10 @@ noremap s "_s
 noremap S "_S
 vnoremap p pgvy
 
+" tab
+vmap > editor.action.indentLines
+vmap < editor.action.outdentLines
+
 " search
 map / actions.find
 
@@ -62,3 +66,10 @@ nmap _ workbench.action.moveEditorToAboveGroup
 " show
 map <leader>sd editor.action.showHover
 map <leader>sf outline.focus
+
+" copilot
+map <leader>cc inlineChat.start
+map <leader>cs editor.action.inlineSuggest.trigger
+map <leader>ca editor.action.inlineSuggest.commit
+map <leader>ch editor.action.inlineSuggest.showPrevious
+map <leader>cl editor.action.inlineSuggest.showNext

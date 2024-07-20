@@ -35,6 +35,10 @@ noremap s "_s
 noremap S "_S
 vmap p gr
 
+" tab
+vmap > <Action>(EditorIndentSelection)
+vmap < <Action>(EditorUnindentSelection)
+
 " search
 map / <Action>(Find)
 
@@ -116,3 +120,6 @@ if &ide =~? 'JetBrains Rider'
 elseif &ide =~? 'webstorm'
     map <leader>we <Action>(ActivateDartAnalysisToolWindow)
 endif
+
+" copilot
+map <leader>cc <Action>(copilot.chat.show)

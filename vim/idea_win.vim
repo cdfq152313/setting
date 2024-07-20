@@ -1,4 +1,4 @@
-source ~/setting/idea_common.vim
+source ~/setting/vim/idea_common.vim
 
 " windows close tab
 map <C-w> <Action>(CloseEditor)
