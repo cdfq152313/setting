@@ -15,8 +15,8 @@ match $nu.os-info.name {
         path add /opt/homebrew/bin
     }
 }
-# Change shell LANG
-$env.LANG = "en_US.UTF-8"
+# Uncomment it when git is chinese
+# $env.LANG = "en_US.UTF-8"
 
 # Shell prompt
 $env.STARSHIP_CONFIG = ([$nu.home-path 'setting' 'nushell' 'starship.toml'] | path join)

@@ -1,6 +1,18 @@
+use std "path add"
+match $nu.os-info.name {
+    "windows" => {
+    }
+    "linux" => {
+        path add /home/linuxbrew/.linuxbrew/bin
+    }
+    "macos" => {
+        path add /opt/homebrew/bin
+    }
+}
 
 def "main sdk" [] {
     def brew_essential [] {
+        brew tap leoafarias/fvm
         brew install vim git fvm pyenv pipx starship zoxide bat
         pipx ensurepath
         pipx install poetry
@@ -11,6 +23,7 @@ def "main sdk" [] {
             choco install vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide
         }
         "linux" => { 
+            sudo apt install build-essential
             brew_essential
         }
         "macos" => {
