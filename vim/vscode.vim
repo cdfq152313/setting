@@ -65,7 +65,9 @@ nmap _ workbench.action.moveEditorToAboveGroup
 
 " show
 map <leader>sd editor.action.showHover
-map <leader>sf outline.focus
+map <leader>s\ editor.action.revealDefinitionAside
+map <leader>sp editor.action.triggerParameterHints
+map <leader>sf workbench.action.gotoSymbol
 
 " copilot
 map <leader>cc inlineChat.start
