@@ -889,3 +889,10 @@ $env.config = {
         }
     ]
 }
+
+source ~/.zoxide.nu
+
+source (
+    if ($nu.os-info.name == "linux" and ($nu.os-info.kernel_version | str contains "WSL2")) {"wsl2.nu"} 
+    else {"empty.nu"} 
+)
