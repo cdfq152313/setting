@@ -75,3 +75,7 @@ map <leader>cs editor.action.inlineSuggest.trigger
 map <leader>ca editor.action.inlineSuggest.commit
 map <leader>ch editor.action.inlineSuggest.showPrevious
 map <leader>cl editor.action.inlineSuggest.showNext
+map <leader>cd github.copilot.interactiveEditor.generateDocs
+map <leader>ct github.copilot.interactiveEditor.generateTests
+map <leader>ce github.copilot.chat.explain
+map <leader>cf github.copilot.interactiveEditor.fix
