@@ -1,12 +1,16 @@
 set -x
 # install package
-sudo apt install git vim zsh unzip build-essential htop
-
-curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+case `uname` in
+  Darwin)
+    brew install git vim zsh zoxide bat 
+  ;;
+  Linux)
+    sudo apt install git vim zsh zoxide bat
+  ;;
+esac
 
 ln -fs $(pwd)/vim/vim.vim ~/.vimrc
 ln -fs $(pwd)/zsh/zshrc ~/.zshrc
-ln -fs $(pwd)/zsh/zimrc ~/.zimrc
+ln -fs $(pwd)/zsh/zsh_plugins.txt ~/.zsh_plugins.txt
 ln -fs $(pwd)/zsh/p10k.zsh ~/.p10k.zsh
 
-echo 'Restart your terminal and execute `zimfw install` to apply zsh config'

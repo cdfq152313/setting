@@ -1,0 +1,16 @@
+# theme
+romkatv/powerlevel10k
+# sindresorhus/pure
+
+# oh-my-zsh plugin
+getantidote/use-omz
+ohmyzsh/ohmyzsh path:lib
+ohmyzsh/ohmyzsh path:plugins/git
+
+# plugin
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+#zdharma-continuum/fast-syntax-highlighting
+djui/alias-tips
+
