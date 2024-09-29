@@ -1,15 +1,17 @@
 # 安裝
 
-此設定檔的重點為
-1. 設置~/.vimrc (vim的設定檔)
-2. 設置~/.zshrc (zsh的設定檔)
-
-直接執行下列程式碼
+下載到家目錄，執行 `setup.sh`
 
 ```bash
+cd ~
+git clone https://github.com/cdfq152313/setting.git
 cd setting
 ./setup.sh
 ```
+
+linux 會使用 apt 安裝常用套件
+mac 會使用 brew 安裝常用套件 (請先確認已安裝 homebrew)
+再來會為 vim 和 zsh 設定 soft link
 
 # 補充說明
 
@@ -19,7 +21,7 @@ cd setting
 在當前目錄中打以下指令，可以建立一個軟連結將家目錄的.vimrc直接參考到目前資料夾的vimrc。
 
 ```bash
-ln -fs $PWD/vimrc ~/.vimrc
+ln -fs $PWD/vim/vimrc ~/.vimrc
 ```
 
 ## vim
@@ -31,7 +33,7 @@ ln -fs $PWD/vimrc ~/.vimrc
 
 ## zshrc
 
-- [zinit](https://github.com/zdharma-continuum/zinit): zsh套件管理器。
-- [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting): 輸入指令時提示指令有無錯誤。
+- [antidote](https://github.com/mattmc3/antidote): zsh套件管理器。
+- [fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting): 輸入指令時提示指令有無錯誤。
 - [zsh-completions](https://github.com/zsh-users/zsh-completions): 遺漏的自動補完。
-- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): 指令輸入建議。
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions): 指令輸入建議(提示出現後按右鍵補完)。
