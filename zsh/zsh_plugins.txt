@@ -11,6 +11,6 @@ ohmyzsh/ohmyzsh path:plugins/git
 zsh-users/zsh-completions
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-history-substring-search
-#zdharma-continuum/fast-syntax-highlighting
+zdharma-continuum/fast-syntax-highlighting
 djui/alias-tips
 
