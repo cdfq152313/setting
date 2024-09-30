@@ -8,10 +8,15 @@ git clone https://github.com/cdfq152313/setting.git
 cd setting
 ./setup.sh
 ```
+Setup 會執行下列動作
 
-linux 會使用 apt 安裝常用套件
-mac 會使用 brew 安裝常用套件 (請先確認已安裝 homebrew)
-再來會為 vim 和 zsh 設定 soft link
+- 安裝套件
+  - linux 會使用 apt 安裝常用套件
+  - mac 會使用 brew 安裝常用套件 (請先確認已安裝 homebrew)
+  - 不需要安裝套件可以註解掉安裝部份
+- 設定 soft-link
+  - 幫 vim 設定 soft-link，用 vim-plugin 做套件管理
+  - 幫 zsh 設定 soft-link，用 antidote 做套件管理。p10k 為 theme。
 
 # 補充說明
 
