@@ -21,8 +21,9 @@ case `uname` in
 esac
 export PATH=$HOME/.pub-cache/bin:$PATH
 
-# If Vim has error message 'Warning: Failed to set locale category LC_NUMERIC to en_TW.'. Uncomment it.
-# export LC_ALL=en_US.UTF-8
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export LC_ALL=en_US.UTF-8
+fi
 
 # Alias
 alias gs="git status"

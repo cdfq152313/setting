@@ -9,6 +9,7 @@ all: dep vim nu
 
 # install dependencies, setup vim and zsh.
 [linux]
+[macos]
 all: dep vim zsh
 
 # install dependencies
@@ -21,6 +22,11 @@ dep:
 dep:
     sudo apt update
     sudo apt install git vim zsh zoxide bat
+
+# install dependencies
+[macos]
+dep:
+    brew install git vim zoxide bat
 
 # setup vim
 [windows]
