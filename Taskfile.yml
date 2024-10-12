@@ -82,8 +82,8 @@ tasks:
     platforms:
       - darwin
     cmds:
-      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim {{.HOME}}}/.vimrc
-      - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim {{.HOME}}/.ideavimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim ~/.ideavimrc
 
   nu_shell:
     internal: true
