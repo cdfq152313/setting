@@ -1,0 +1,98 @@
+version: "3"
+
+tasks:
+  all:
+    desc: Install dependencies, setup vim and shell.
+    cmds:
+      - task: dep
+      - task: vim
+      - task: shell
+
+  dep:
+    desc: Install dependencies.
+    deps:
+      - win_dep
+      - linux_dep
+      - mac_dep
+
+  vim:
+    desc: Setup vim.
+    deps:
+      - win_vim
+      - linux_vim
+      - mac_vim
+
+  shell:
+    desc: Setup shell.
+    deps:
+      - nu_shell
+      - zsh_shell
+
+  win_dep:
+    internal: true
+    platforms:
+      - windows
+    cmds:
+      - choco install nushell vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide
+
+  linux_dep:
+    internal: true
+    platforms:
+      - linux
+    cmds:
+      - sudo apt update
+      - sudo apt install git vim zsh zoxide bat
+
+  mac_dep:
+    internal: true
+    platforms:
+      - darwin
+    cmds:
+      - brew install git vim zoxide bat
+
+  win_vim:
+    internal: true
+    platforms:
+      - windows
+    vars:
+      HOME: 'C:{{.HOMEPATH}}'
+    cmds:
+      - echo 'source {{.TASKFILE_DIR}}\vim\vim.vim' > '{{.HOME}}\.vimrc'
+      - echo 'source {{.TASKFILE_DIR}}\vim\idea_win.vim' > '{{.HOME}}\.ideavimrc'
+
+  linux_vim:
+    internal: true
+    platforms:
+      - linux
+    cmds:
+      - ln -fs {{.TASKFILE_DIR}/vim/vim.vim {{.HOME}}}/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/idea_win.vim {{.HOME}}/.ideavimrc
+
+  mac_vim:
+    internal: true
+    platforms:
+      - darwin
+    cmds:
+      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim {{.HOME}}}/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim {{.HOME}}/.ideavimrc
+
+  nu_shell:
+    internal: true
+    platforms:
+      - windows
+    vars:
+      HOME: 'C:{{.HOMEPATH}}'
+    cmds:
+      - git submodule update --recursive --remote --init
+      - echo 'source {{.TASKFILE_DIR}}\nushell\env.nu' > '{{.HOME}}\AppData\Roaming\nushell\env.nu'
+      - echo 'source {{.TASKFILE_DIR}}\nushell\config.nu' > '{{.HOME}}\AppData\Roaming\nushell\config.nu'
+
+  zsh_shell:
+    internal: true
+    platforms:
+      - linux
+      - darwin
+    cmds:
+      - ln -fs {{.TASKFILE_DIR}}/zsh/zshrc {{.HOME}}/.zshrc
+      - ln -fs {{.TASKFILE_DIR}}/zsh/zsh_plugins.txt {{.HOME}/.zsh_plugins.txt
+      - ln -fs {{.TASKFILE_DIR}}/zsh/p10k.zsh {{.HOME}}/.p10k.zsh
