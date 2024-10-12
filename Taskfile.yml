@@ -54,11 +54,20 @@ tasks:
     internal: true
     platforms:
       - windows
-    vars:
-      HOME: 'C:{{.HOMEPATH}}'
     cmds:
-      - echo 'source {{.TASKFILE_DIR}}\vim\vim.vim' > '{{.HOME}}\.vimrc'
-      - echo 'source {{.TASKFILE_DIR}}\vim\idea_win.vim' > '{{.HOME}}\.ideavimrc'
+      - task: win_vim_plugin
+      - echo 'source {{.TASKFILE_DIR}}\vim\vim.vim' > ~/.vimrc
+      - echo 'source {{.TASKFILE_DIR}}\vim\idea_win.vim' > ~/.ideavimrc
+
+  win_vim_plugin:
+    internal: true
+    platforms:
+      - windows
+    cmds:
+      - curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    status:
+      - test -f ~/.vim/autoload/plug.vim
+
 
   linux_vim:
     internal: true
@@ -80,12 +89,10 @@ tasks:
     internal: true
     platforms:
       - windows
-    vars:
-      HOME: 'C:{{.HOMEPATH}}'
     cmds:
       - git submodule update --recursive --remote --init
-      - echo 'source {{.TASKFILE_DIR}}\nushell\env.nu' > '{{.HOME}}\AppData\Roaming\nushell\env.nu'
-      - echo 'source {{.TASKFILE_DIR}}\nushell\config.nu' > '{{.HOME}}\AppData\Roaming\nushell\config.nu'
+      - echo 'source {{.TASKFILE_DIR}}\nushell\env.nu' > ~/AppData/Roaming/nushell/env.nu
+      - echo 'source {{.TASKFILE_DIR}}\nushell\config.nu' > ~/AppData/Roaming/nushell/config.nu
 
   zsh_shell:
     internal: true
