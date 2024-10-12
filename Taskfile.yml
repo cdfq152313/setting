@@ -74,8 +74,8 @@ tasks:
     platforms:
       - linux
     cmds:
-      - ln -fs {{.TASKFILE_DIR}/vim/vim.vim {{.HOME}}}/.vimrc
-      - ln -fs {{.TASKFILE_DIR}}/vim/idea_win.vim {{.HOME}}/.ideavimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/idea_win.vim ~/.ideavimrc
 
   mac_vim:
     internal: true
@@ -100,6 +100,6 @@ tasks:
       - linux
       - darwin
     cmds:
-      - ln -fs {{.TASKFILE_DIR}}/zsh/zshrc {{.HOME}}/.zshrc
-      - ln -fs {{.TASKFILE_DIR}}/zsh/zsh_plugins.txt {{.HOME}/.zsh_plugins.txt
-      - ln -fs {{.TASKFILE_DIR}}/zsh/p10k.zsh {{.HOME}}/.p10k.zsh
+      - ln -fs {{.TASKFILE_DIR}}/zsh/zshrc ~/.zshrc
+      - ln -fs {{.TASKFILE_DIR}}/zsh/zsh_plugins.txt ~/.zsh_plugins.txt
+      - ln -fs {{.TASKFILE_DIR}}/zsh/p10k.zsh ~/.p10k.zsh
