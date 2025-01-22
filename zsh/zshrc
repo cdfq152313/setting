@@ -27,6 +27,13 @@ fi
 
 # Alias
 alias gs="git status"
+# mu-repo
+alias ms="mu status"
+alias mco="mu checkout"
+alias mf="mu fetch"
+alias mpr="mu pull --rebase"
+alias mp="mu push"
+alias md="mu diff"
 
 # zoxide
 eval "$(zoxide init zsh)"
