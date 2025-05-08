@@ -22,11 +22,11 @@ vmap < editor.action.outdentLines
 map / actions.find
 
 " surround
-vnoremap " "zc"<C-R>z"<Esc>
-vnoremap ' "zc'<C-R>z'<Esc>
-vnoremap ( "zc(<C-R>z)<Esc>
-vnoremap [ "zc[<C-R>z]<Esc>
-vnoremap { "zc{<C-R>z}<Esc>
+vmap " S"
+vmap ' S'
+vmap ( S(
+vmap [ S[
+vmap { S{
 vmap a editor.action.smartSelect.expand
 vmap z editor.action.smartSelect.shrink
 
@@ -59,13 +59,12 @@ map f extension.aceJump.multiChar
 nmap <tab> workbench.action.focusNextGroup
 nmap <leader>\ workbench.action.splitEditorToRightGroup
 nmap \ workbench.action.moveEditorToRightGroup
-nmap | workbench.action.moveEditorToLeftGroup
+nmap | workbench.action.joinAllGroups
 nmap - workbench.action.moveEditorToBelowGroup
 nmap _ workbench.action.moveEditorToAboveGroup
 
 " show
 map <leader>sd editor.action.showHover
-map <leader>s\ editor.action.revealDefinitionAside
 map <leader>sp editor.action.triggerParameterHints
 map <leader>sf workbench.action.gotoSymbol
 
