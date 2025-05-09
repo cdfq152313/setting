@@ -1,10 +1,7 @@
 " Install vim-plug if not found
-if !has("win32")
-  let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-  if empty(glob(data_dir . '/autoload/plug.vim'))
-    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-  endif
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
 " Run PlugInstall if there are missing plugins
@@ -12,20 +9,21 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
-if has("win32")
-  call plug#begin('~/vimfiles/bundle')
-else
-  call plug#begin('~/.vim/plugged')
-endif
+call plug#begin()
 Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
-if has('nvim')
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-endif
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 " 編輯喜好設定
+" coc
+set encoding=utf-8
+set nobackup
+set nowritebackup
+set updatetime=300
+set signcolumn=yes
+" other
 set scrolloff=5
 set shiftwidth=4 " 設定縮排寬度 = 4
 set tabstop=4    " tab 的字元數
@@ -48,10 +46,9 @@ nnoremap <F2> :NERDTreeToggle<CR>
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 " Close the tab if NERDTree is the only window remaining in it.
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-nmap <silent> <F3> :wincmd h<CR>
-nmap <silent> <F4> :wincmd l<CR>
-nnoremap <F5> :tabprevious<CR>
-nnoremap <F6> :tabnext<CR>
+" nnoremap <silent> <tab> :wincmd w<CR>
+nnoremap <silent> <F3> :tabprevious<CR>
+nnoremap <silent> <F4> :tabnext<CR>
 
 " home/end/pageup/pagedown
 map <silent> H ^
@@ -82,8 +79,44 @@ nmap <silent> <C-_> <leader>c<space>
 vmap <silent> <C-_> <leader>c<space>
 
 " surround
-vnoremap " "zc"<C-R>z"<Esc>
-vnoremap ' "zc'<C-R>z'<Esc>
-vnoremap ( "zc(<C-R>z)<Esc>
-vnoremap [ "zc[<C-R>z]<Esc>
-vnoremap { "zc{<C-R>z}<Esc>
+vmap " S"
+vmap ' S'
+vmap ( S(
+vmap [ S[
+vmap { S{
+
+
+" common action
+nnoremap <silent> <leader>r <Plug>(coc-rename)
+nnoremap <silent> <leader>f :CocCommand editor.action.formatDocument<CR>
+nnoremap <silent> <leader>o :CocCommand editor.action.organizeImport<CR>
+nnoremap <silent> <leader>sd :call ShowDocumentation()<CR>
+nmap <leader>q  <Plug>(coc-codeaction-cursor)
+
+" code navigation 
+nmap <silent> <leader>gd <Plug>(coc-definition)
+nmap <silent> <leader>gt <Plug>(coc-type-definition)
+nmap <silent> <leader>gi <Plug>(coc-implementation)
+nmap <silent> <leader>gr <Plug>(coc-references)
+
+" coc-specific config
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice
+inoremap <silent><expr> <TAB> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Preview function
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
