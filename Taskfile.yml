@@ -75,6 +75,7 @@ tasks:
       - linux
     cmds:
       - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/coc-settings.json ~/.vim/coc-settings.json
       - ln -fs {{.TASKFILE_DIR}}/vim/idea_win.vim ~/.ideavimrc
 
   mac_vim:
@@ -83,6 +84,7 @@ tasks:
       - darwin
     cmds:
       - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
+      - ln -fs {{.TASKFILE_DIR}}/vim/coc-settings.json ~/.vim/coc-settings.json
       - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim ~/.ideavimrc
 
   nu_shell:
