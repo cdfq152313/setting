@@ -46,9 +46,6 @@ nnoremap <F2> :NERDTreeToggle<CR>
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 " Close the tab if NERDTree is the only window remaining in it.
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
-" nnoremap <silent> <tab> :wincmd w<CR>
-nnoremap <silent> <F3> :tabprevious<CR>
-nnoremap <silent> <F4> :tabnext<CR>
 
 " home/end/pageup/pagedown
 map <silent> H ^
@@ -57,12 +54,10 @@ noremap K {
 noremap J }
 
 " Move focus among window/spilt
-nnoremap <silent> <A-Left> :tabp<CR>
-nnoremap <silent> <A-Right> :tabn<CR>
-nnoremap <silent> <S-Up> :wincmd k<CR>
-nnoremap <silent> <S-Down> :wincmd j<CR>
-nnoremap <silent> <S-Left> :wincmd h<CR>
-nnoremap <silent> <S-Right> :wincmd l<CR>
+nnoremap <silent> <F3> :tabprevious<CR>
+nnoremap <silent> <F4> :tabnext<CR>
+nnoremap <silent> <tab> :wincmd w<CR>
+nnoremap <silent> <C-]> <C-I>
 
 " not copy action
 noremap D "_d
