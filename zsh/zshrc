@@ -27,17 +27,18 @@ fi
 
 # Alias
 alias gs="git status"
-# mu-repo
-alias ms="mu status"
-alias mco="mu checkout"
-alias mf="mu fetch"
-alias mpr="mu pull --rebase"
-alias mp="mu push"
-alias md="mu diff"
 
 # fzf (fd)
-export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+if command -v fd &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+elif command -v fdfind &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --strip-cwd-prefix'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
 
 # zoxide
-eval "$(zoxide init zsh)"
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
