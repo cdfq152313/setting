@@ -33,7 +33,7 @@ tasks:
     platforms:
       - windows
     cmds:
-      - choco install nushell vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide
+      - choco install nushell vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide fzf fd
 
   linux_dep:
     internal: true
@@ -41,14 +41,14 @@ tasks:
       - linux
     cmds:
       - sudo apt update
-      - sudo apt install git vim zsh zoxide bat
+      - sudo apt install git vim zsh zoxide bat fzf fd
 
   mac_dep:
     internal: true
     platforms:
       - darwin
     cmds:
-      - brew install git vim zoxide bat
+      - brew install git vim bat zoxide fzf fd
 
   win_vim:
     internal: true
