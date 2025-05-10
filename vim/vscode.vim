@@ -4,6 +4,10 @@ noremap L $
 noremap K {
 noremap J }
 
+" Redo undo
+nnoremap u undo
+nnoremap U redo
+
 " not copy action
 noremap D "_d
 noremap DD "_dd

@@ -27,6 +27,7 @@ set nowritebackup
 set updatetime=300
 set signcolumn=yes
 " other
+set belloff=all
 set scrolloff=5
 set shiftwidth=4 " 設定縮排寬度 = 4
 set tabstop=4    " tab 的字元數
@@ -50,12 +51,6 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 " Close the tab if NERDTree is the only window remaining in it.
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 
-" home/end/pageup/pagedown
-map <silent> H ^
-map <silent> L $
-noremap K {
-noremap J }
-
 " Move focus among window/spilt
 nnoremap <silent> <F3> :tabprevious<CR>
 nnoremap <silent> <F4> :tabnext<CR>
@@ -65,6 +60,15 @@ nnoremap <silent> <C-]> <C-I>
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
 nnoremap <silent> <C-S-P> :Commands<CR>
+
+" home/end/pageup/pagedown
+map <silent> H ^
+map <silent> L $
+noremap K {
+noremap J }
+
+" Redo undo
+nnoremap U <C-R>
 
 " not copy action
 noremap D "_d
