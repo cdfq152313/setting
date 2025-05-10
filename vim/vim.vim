@@ -14,6 +14,9 @@ Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'terryma/vim-expand-region'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 " 編輯喜好設定
@@ -79,6 +82,8 @@ vmap ' S'
 vmap ( S(
 vmap [ S[
 vmap { S{
+vmap a <Plug>(expand_region_expand)
+vmap z <Plug>(expand_region_shrink)
 
 
 " common action
