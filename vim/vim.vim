@@ -62,6 +62,10 @@ nnoremap <silent> <F4> :tabnext<CR>
 nnoremap <silent> <tab> :wincmd w<CR>
 nnoremap <silent> <C-]> <C-I>
 
+" ctrlp
+nnoremap <silent> <C-P> :Files<CR>
+nnoremap <silent> <C-S-P> :Commands<CR>
+
 " not copy action
 noremap D "_d
 noremap DD "_dd
