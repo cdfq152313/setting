@@ -60,7 +60,7 @@ nnoremap <silent> <C-]> <C-I>
 
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
-nnoremap <silent> <C-A-P> :Commands<CR>
+nnoremap <silent> <S-P> :Commands<CR>
 
 " home/end/pageup/pagedown
 map <silent> H ^
