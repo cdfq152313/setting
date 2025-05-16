@@ -18,6 +18,7 @@ Plug 'terryma/vim-expand-region'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'github/copilot.vim'
+Plug 'embear/vim-localvimrc'
 call plug#end()
 
 " 編輯喜好設定
@@ -41,6 +42,9 @@ set smartindent  " 設定 smartindent
 set confirm      " 操作過程有衝突時，以明確的文字來詢問
 set history=100  " 保留 100 個使用過的指令
 colorscheme torte
+
+" memory localvimrc setting
+let g:localvimrc_persistent = 2
 
 " 改變leader key
 let mapleader = " "
