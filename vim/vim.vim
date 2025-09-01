@@ -86,8 +86,8 @@ noremap S "_S
 vnoremap p pgvy
 
 " nerdcommenter
-nmap <silent> <C-_> <leader>c<space>
-vmap <silent> <C-_> <leader>c<space>
+nmap <silent> <C-/> <leader>c<space>
+vmap <silent> <C-/> <leader>c<space>
 
 " surround
 vmap " S"
