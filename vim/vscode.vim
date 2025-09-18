@@ -73,8 +73,4 @@ map <leader>sp editor.action.triggerParameterHints
 map <leader>sf workbench.action.gotoSymbol
 
 " copilot
-map <leader>cc inlineChat.start
-" imap <S-tab> editor.action.inlineSuggest.trigger
-imap <S-tab> editor.action.inlineSuggest.showNext
-imap <C-S-tab> editor.action.inlineSuggest.showPrevious
-
+map <leader>cc workbench.action.chat.open
