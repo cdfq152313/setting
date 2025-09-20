@@ -27,6 +27,7 @@ fi
 
 # Alias
 alias gs="git status"
+alias gcb='git branch  --sort=-committerdate | grep -v "^\*" | fzf --height=20% --reverse --info=inline | xargs git checkout'
 
 # fzf (fd)
 if command -v fd &> /dev/null; then
