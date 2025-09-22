@@ -26,11 +26,6 @@ vmap < editor.action.outdentLines
 map / actions.find
 
 " surround
-vmap " S"
-vmap ' S'
-vmap ( S(
-vmap [ S[
-vmap { S{
 vmap a editor.action.smartSelect.expand
 vmap z editor.action.smartSelect.shrink
 
@@ -54,7 +49,12 @@ map <leader>ds workbench.action.debug.stop
 map <leader>db editor.debug.action.toggleBreakpoint
 
 " code navigation
-map <leader>ne editor.action.marker.nextInFiles
+nmap gr references-view.findReferences
+nmap gi editor.action.goToImplementation
+nmap [d editor.action.marker.prev
+nmap [D editor.action.marker.prevInFiles
+nmap ]d editor.action.marker.next
+nmap ]D editor.action.marker.nextInFiles
 
 " easy motion
 map f extension.aceJump.multiChar
