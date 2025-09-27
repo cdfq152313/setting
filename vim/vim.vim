@@ -51,9 +51,9 @@ let g:localvimrc_persistent = 2
 let mapleader = " "
 
 " Move focus among window/spilt
-nnoremap <silent> <F2> :wincmd w<CR>
 nnoremap <silent> <F3> :tabprevious<CR>
 nnoremap <silent> <F4> :tabnext<CR>
+nnoremap <silent> <F6> :wincmd w<CR>
 
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
