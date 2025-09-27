@@ -5,8 +5,8 @@ noremap K {
 noremap J }
 
 " Redo undo
-nnoremap u undo
-nnoremap U redo
+nnoremap u :vsc undo<CR>
+nnoremap U :vsc redo<CR>
 
 " not copy action
 noremap D "_d
@@ -19,11 +19,11 @@ noremap S "_S
 vnoremap p pgvy
 
 " tab
-vmap > editor.action.indentLines
-vmap < editor.action.outdentLines
+vmap > :vsc editor.action.indentLines<CR>
+vmap < :vsc editor.action.outdentLines<CR>
 
 " search
-map / actions.find
+map / :vsc actions.find<CR>
 
 " surround
 vmap " S"
@@ -31,51 +31,51 @@ vmap ' S'
 vmap ( S(
 vmap [ S[
 vmap { S{
-vmap a editor.action.smartSelect.expand
-vmap z editor.action.smartSelect.shrink
+vmap a :vsc editor.action.smartSelect.expand<CR>
+vmap z :vsc editor.action.smartSelect.shrink<CR>
 
 " multiple cursor
-vmap n editor.action.moveSelectionToNextFindMatch
-vmap N editor.action.moveSelectionToPreviousFindMatch
-vmap m editor.action.addSelectionToNextFindMatch
-vmap M cursorUndo
+vmap n :vsc editor.action.moveSelectionToNextFindMatch<CR>
+vmap N :vsc editor.action.moveSelectionToPreviousFindMatch<CR>
+vmap m :vsc editor.action.addSelectionToNextFindMatch<CR>
+vmap M :vsc cursorUndo<CR>
 
 " common action 
-map <leader>a gitlens.toggleFileBlame
-map <leader>r editor.action.rename
-map <leader>f editor.action.formatDocument
-map <leader>o editor.action.organizeImports
-map <leader>h gitlens.views.lineHistory.focus
-map <leader>q editor.action.quickFix
+map <leader>a :vsc gitlens.toggleFileBlame<CR>
+map <leader>r :vsc editor.action.rename<CR>
+map <leader>f :vsc editor.action.formatDocument<CR>
+map <leader>o :vsc editor.action.organizeImports<CR>
+map <leader>h :vsc gitlens.views.lineHistory.focus<CR>
+map <leader>q :vsc editor.action.quickFix<CR>
 
 " build/run/debug
-map <leader>dd workbench.action.debug.start
-map <leader>ds workbench.action.debug.stop
-map <leader>db editor.debug.action.toggleBreakpoint
+map <leader>dd :vsc workbench.action.debug.start<CR>
+map <leader>ds :vsc workbench.action.debug.stop<CR>
+map <leader>db :vsc editor.debug.action.toggleBreakpoint<CR>
 
 " code navigation
-nmap gr references-view.findReferences
-nmap gi editor.action.goToImplementation
-nmap [d editor.action.marker.prev
-nmap [D editor.action.marker.prevInFiles
-nmap ]d editor.action.marker.next
-nmap ]D editor.action.marker.nextInFiles
+nmap gr :vsc references-view.findReferences<CR>
+nmap gi :vsc editor.action.goToImplementation<CR>
+nmap [d :vsc editor.action.marker.prev<CR>
+nmap [D :vsc editor.action.marker.prevInFiles<CR>
+nmap ]d :vsc editor.action.marker.next<CR>
+nmap ]D :vsc editor.action.marker.nextInFiles<CR>
 
 " easy motion
-map f extension.aceJump.multiChar
+map f :vsc extension.aceJump.multiChar<CR>
 
 " split window
-nmap <tab> workbench.action.focusNextGroup
-nmap <leader>\ workbench.action.splitEditorToRightGroup
-nmap \ workbench.action.moveEditorToRightGroup
-nmap | workbench.action.joinAllGroups
-nmap - workbench.action.moveEditorToBelowGroup
-nmap _ workbench.action.moveEditorToAboveGroup
+nmap <tab> :vsc workbench.action.focusNextGroup<CR>
+nmap <leader>\ :vsc workbench.action.splitEditorToRightGroup<CR>
+nmap \ :vsc workbench.action.moveEditorToRightGroup<CR>
+nmap | :vsc workbench.action.joinAllGroups<CR>
+nmap - :vsc workbench.action.moveEditorToBelowGroup<CR>
+nmap _ :vsc workbench.action.moveEditorToAboveGroup<CR>
 
 " show
-map <leader>sd editor.action.showHover
-map <leader>sp editor.action.triggerParameterHints
-map <leader>sf workbench.action.gotoSymbol
+map <leader>sd :vsc editor.action.showHover<CR>
+map <leader>sp :vsc editor.action.triggerParameterHints<CR>
+map <leader>sf :vsc workbench.action.gotoSymbol<CR>
 
 " copilot
-map <leader>cc workbench.action.chat.open
+map <leader>cc :vsc workbench.action.chat.open<CR>
