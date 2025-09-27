@@ -26,6 +26,11 @@ vmap < editor.action.outdentLines
 map / actions.find
 
 " surround
+vmap " S"
+vmap ' S'
+vmap ( S(
+vmap [ S[
+vmap { S{
 vmap a editor.action.smartSelect.expand
 vmap z editor.action.smartSelect.shrink
 
