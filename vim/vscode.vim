@@ -77,5 +77,7 @@ map <leader>sd :vsc editor.action.showHover<CR>
 map <leader>sp :vsc editor.action.triggerParameterHints<CR>
 map <leader>sf :vsc workbench.action.gotoSymbol<CR>
 
-" copilot
-map <leader>cc :vsc workbench.action.chat.open<CR>
+" open sidebar 
+nmap <leader>wc :vsc workbench.action.chat.open<CR>
+nmap <leader>we :vsc workbench.view.explorer<CR>
+nmap <leader>wg :vsc workbench.view.scm<CR>

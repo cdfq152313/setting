@@ -1,7 +1,8 @@
 " Install vim-plug if not found
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 " Run PlugInstall if there are missing plugins
@@ -51,13 +52,14 @@ let g:localvimrc_persistent = 2
 let mapleader = " "
 
 " Move focus among window/spilt
-nnoremap <silent> <F3> :tabprevious<CR>
-nnoremap <silent> <F4> :tabnext<CR>
-nnoremap <silent> <F6> :wincmd w<CR>
+nnoremap <silent> <F2> :wincmd w<CR>
+nnoremap <silent> <S-F3> :tabprevious<CR>
+nnoremap <silent> <F3> :tabnext<CR>
 
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
 nnoremap <silent> <leader>p :Commands<CR>
+nnoremap <silent> <F1> :Commands<CR>
 
 " home/end/pageup/pagedown
 map <silent> H ^
