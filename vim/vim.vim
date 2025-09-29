@@ -23,6 +23,7 @@ Plug 'vim-test/vim-test'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vim-which-key'
 Plug 'puremourning/vimspector'
+Plug 'tpope/vim-dotenv'
 if has('nvim')
     Plug 'sindrets/diffview.nvim'
 endif
@@ -137,9 +138,17 @@ function! ShowDocumentation()
 endfunction
 
 " vim-test
-nmap <silent> <leader>t :TestNearest<CR>
-nmap <silent> <leader>T :TestFile<CR>
+nnoremap <silent> <leader>t :TestNearest<CR>
+nnoremap <silent> <leader>T :TestFile<CR>
+nnoremap <silent> <leader>dt :call DebugNearest()<CR>
 
 " debugger
 let g:vimspector_install_gadgets = [ 'debugpy' ]
+noremap <silent> <F5> :call vimspector#Continue()<CR>
+noremap <silent> <leader>db :call vimspector#ToggleBreakpoint()<CR>
+noremap <silent> <leader>ds :call vimspector#StepOver()<CR>
+noremap <silent> <leader>di :call vimspector#StepInto()<CR>
+noremap <silent> <leader>do :call vimspector#StepOut()<CR>
+noremap <silent> <leader>dr :call vimspector#RunToCursor()<CR>
+noremap <silent> <leader>dc :call vimspector#ClearBreakpoints()<CR>
 
