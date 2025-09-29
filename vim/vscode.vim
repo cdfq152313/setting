@@ -53,6 +53,12 @@ map <leader>dd :vsc workbench.action.debug.start<CR>
 map <leader>ds :vsc workbench.action.debug.stop<CR>
 map <leader>db :vsc editor.debug.action.toggleBreakpoint<CR>
 
+" test
+map <leader>t :vsc pytest-runner.run-test<CR>
+map <leader>dt :vsc pytest-runner.run-test-docker<CR>
+map <leader>T :vsc pytest-runner.run-module-test<CR>
+map <leader>dT :vsc pytest-runner.run-module-test-docker<CR>
+
 " code navigation
 nmap gr :vsc references-view.findReferences<CR>
 nmap gi :vsc editor.action.goToImplementation<CR>

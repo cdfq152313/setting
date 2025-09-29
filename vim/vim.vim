@@ -22,6 +22,7 @@ Plug 'embear/vim-localvimrc'
 Plug 'vim-test/vim-test'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vim-which-key'
+Plug 'puremourning/vimspector'
 if has('nvim')
     Plug 'sindrets/diffview.nvim'
 endif
@@ -138,3 +139,7 @@ endfunction
 " vim-test
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
+
+" debugger
+let g:vimspector_install_gadgets = [ 'debugpy' ]
+
