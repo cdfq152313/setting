@@ -21,6 +21,10 @@ Plug 'github/copilot.vim'
 Plug 'embear/vim-localvimrc'
 Plug 'vim-test/vim-test'
 Plug 'airblade/vim-rooter'
+Plug 'liuchengxu/vim-which-key'
+if has('nvim')
+    Plug 'sindrets/diffview.nvim'
+endif
 call plug#end()
 
 " 編輯喜好設定
@@ -49,7 +53,10 @@ colorscheme torte
 let g:localvimrc_persistent = 2
 
 " 改變leader key
-let mapleader = " "
+let g:mapleader = "\<Space>"
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> g :<c-u>WhichKey 'g'<CR>
+set timeoutlen=300
 
 " Move focus among window/spilt
 nnoremap <silent> <F2> :wincmd w<CR>
