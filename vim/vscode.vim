@@ -31,8 +31,8 @@ vmap ' S'
 vmap ( S(
 vmap [ S[
 vmap { S{
-vmap a :vsc editor.action.smartSelect.expand<CR>
-vmap z :vsc editor.action.smartSelect.shrink<CR>
+vmap a editor.action.smartSelect.expand
+vmap z editor.action.smartSelect.shrink
 
 " multiple cursor
 vmap n editor.action.addSelectionToNextFindMatch
