@@ -35,10 +35,10 @@ vmap a :vsc editor.action.smartSelect.expand<CR>
 vmap z :vsc editor.action.smartSelect.shrink<CR>
 
 " multiple cursor
-vmap n :vsc editor.action.moveSelectionToNextFindMatch<CR>
-vmap N :vsc editor.action.moveSelectionToPreviousFindMatch<CR>
-vmap m :vsc editor.action.addSelectionToNextFindMatch<CR>
-vmap M :vsc cursorUndo<CR>
+vmap n editor.action.addSelectionToNextFindMatch
+vmap N editor.action.addSelectionToPreviousFindMatch
+vmap q editor.action.moveSelectionToNextFindMatch
+vmap Q editor.action.moveSelectionToPreviousFindMatch
 
 " common action 
 map <leader>a :vsc gitlens.toggleFileBlame<CR>
