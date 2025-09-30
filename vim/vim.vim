@@ -25,6 +25,7 @@ Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vim-which-key'
 Plug 'puremourning/vimspector'
 Plug 'tpope/vim-dotenv'
+Plug 'mg979/vim-visual-multi'
 if has('nvim')
     Plug 'sindrets/diffview.nvim'
 endif
