@@ -11,6 +11,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 call plug#begin()
+Plug 'preservim/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -64,6 +65,9 @@ set timeoutlen=300
 nnoremap <silent> <F2> :wincmd w<CR>
 nnoremap <silent> <S-F3> :tabprevious<CR>
 nnoremap <silent> <F3> :tabnext<CR>
+
+" Nerdtree
+nnoremap <silent> <leader>we :NERDTreeToggle<CR>
 
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
