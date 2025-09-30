@@ -11,6 +11,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 call plug#begin()
+Plug 'tpope/vim-sensible'
 Plug 'preservim/nerdtree'
 Plug 'preservim/nerdcommenter'
 Plug 'tpope/vim-surround'
@@ -40,17 +41,14 @@ set updatetime=300
 set signcolumn=yes
 " other
 set belloff=all
-set scrolloff=5
 set shiftwidth=4 " 設定縮排寬度 = 4
 set tabstop=4    " tab 的字元數
 set expandtab    " 用 space 代替 tab
 set ic           " 設定搜尋忽略大小寫
 set ru           " 第幾行第幾個字
 set nu           " 顯示行號
-set incsearch    " 在關鍵字還沒完全輸入完畢前就顯示結果
 set smartindent  " 設定 smartindent
 set confirm      " 操作過程有衝突時，以明確的文字來詢問
-set history=100  " 保留 100 個使用過的指令
 colorscheme torte
 
 " memory localvimrc setting
