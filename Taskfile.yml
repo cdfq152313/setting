@@ -68,24 +68,31 @@ tasks:
     status:
       - test -f ~/.vim/autoload/plug.vim
 
-
   linux_vim:
     internal: true
     platforms:
       - linux
+    deps:
+      - unix_vim
     cmds:
-      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
-      - ln -fs {{.TASKFILE_DIR}}/vim/coc-settings.json ~/.vim/coc-settings.json
       - ln -fs {{.TASKFILE_DIR}}/vim/idea_win.vim ~/.ideavimrc
 
   mac_vim:
     internal: true
     platforms:
       - darwin
+    deps:
+      - unix_vim
+    cmds:
+      - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim ~/.ideavimrc
+
+  unix_vim:
+    internal: true
     cmds:
       - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.vimrc
+      - mkdir -p ~/.config/nvim
+      - ln -fs {{.TASKFILE_DIR}}/vim/vim.vim ~/.config/nvim/init.vim
       - ln -fs {{.TASKFILE_DIR}}/vim/coc-settings.json ~/.vim/coc-settings.json
-      - ln -fs {{.TASKFILE_DIR}}/vim/idea_mac.vim ~/.ideavimrc
 
   nu_shell:
     internal: true

@@ -110,7 +110,7 @@ vmap a <Plug>(expand_region_expand)
 vmap z <Plug>(expand_region_shrink)
 
 " coc plugin
-let g:coc_global_extensions = ['coc-json', 'coc-pyright']
+let g:coc_global_extensions = ['coc-json', 'coc-pyright', 'coc-yaml', 'coc-prettier']
 
 " common action
 nnoremap <silent> <leader>r <Plug>(coc-rename)
