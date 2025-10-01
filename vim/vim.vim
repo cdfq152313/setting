@@ -64,6 +64,7 @@ set timeoutlen=300
 nnoremap <silent> <F2> :wincmd w<CR>
 nnoremap <silent> <S-F3> :tabprevious<CR>
 nnoremap <silent> <F3> :tabnext<CR>
+nnoremap <silent> <F4> :tabc<CR>
 
 " Nerdtree
 nnoremap <silent> <leader>we :NERDTreeToggle<CR>
@@ -159,3 +160,7 @@ noremap <silent> <leader>do :call vimspector#StepOut()<CR>
 noremap <silent> <leader>dr :call vimspector#RunToCursor()<CR>
 noremap <silent> <leader>dc :call vimspector#ClearBreakpoints()<CR>
 
+" diffview
+if has('nvim')
+    vnoremap <silent> <leader>h :DiffviewFileHistory<CR> 
+endif
