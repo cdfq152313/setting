@@ -1,3 +1,8 @@
+" neovim python path
+if has('nvim') && executable(expand('~/.config/nvim/venv/bin/python'))
+    let g:python3_host_prog = expand('~/.config/nvim/venv/bin/python') 
+endif
+
 " Install vim-plug if not found
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
