@@ -18,7 +18,7 @@ noremap s "_s
 noremap S "_S
 vnoremap p pgvy
 
-" tab
+" indent/outdent
 vmap > :vsc editor.action.indentLines<CR>
 vmap < :vsc editor.action.outdentLines<CR>
 
@@ -71,7 +71,6 @@ nmap ]D :vsc editor.action.marker.nextInFiles<CR>
 map f :vsc extension.aceJump.multiChar<CR>
 
 " split window
-nmap <tab> :vsc workbench.action.focusNextGroup<CR>
 nmap <leader>\ :vsc workbench.action.splitEditorToRightGroup<CR>
 nmap \ :vsc workbench.action.moveEditorToRightGroup<CR>
 nmap | :vsc workbench.action.joinAllGroups<CR>
@@ -87,3 +86,4 @@ map <leader>sf :vsc workbench.action.gotoSymbol<CR>
 nmap <leader>wc :vsc workbench.action.chat.open<CR>
 nmap <leader>we :vsc workbench.view.explorer<CR>
 nmap <leader>wg :vsc workbench.view.scm<CR>
+nmap <leader>wt :vsc workbench.action.terminal.toggleTerminal<CR>
