@@ -83,7 +83,7 @@ map <leader>sp :vsc editor.action.triggerParameterHints<CR>
 map <leader>sf :vsc workbench.action.gotoSymbol<CR>
 
 " open sidebar 
-nmap <leader>wc :vsc workbench.action.chat.open<CR>
-nmap <leader>we :vsc workbench.view.explorer<CR>
-nmap <leader>wg :vsc workbench.view.scm<CR>
-nmap <leader>wt :vsc workbench.action.terminal.toggleTerminal<CR>
+map <leader>wc :vsc workbench.action.chat.open<CR>
+map <leader>we :vsc workbench.view.explorer<CR>
+map <leader>wg :vsc workbench.view.scm<CR>
+map <leader>wt :vsc workbench.action.terminal.toggleTerminal<CR>
