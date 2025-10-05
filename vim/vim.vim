@@ -158,6 +158,7 @@ nnoremap <silent> <leader>dt :call DebugNearest()<CR>
 " debugger
 let g:vimspector_install_gadgets = [ 'debugpy' ]
 noremap <silent> <F5> :call vimspector#Continue()<CR>
+noremap <silent> <leader>dq :call vimspector#Reset({ 'interactive': v:true })<CR>
 noremap <silent> <leader>db :call vimspector#ToggleBreakpoint()<CR>
 noremap <silent> <leader>ds :call vimspector#StepOver()<CR>
 noremap <silent> <leader>di :call vimspector#StepInto()<CR>
