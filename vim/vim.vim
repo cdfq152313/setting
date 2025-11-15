@@ -1,6 +1,6 @@
 " neovim python path
 if has('nvim') && executable(expand('~/.config/nvim/venv/bin/python'))
-    let g:python3_host_prog = expand('~/.config/nvim/venv/bin/python') 
+    let g:python3_host_prog = expand('~/.config/nvim/venv/bin/python')
 endif
 
 " Install vim-plug if not found
@@ -32,6 +32,7 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'puremourning/vimspector'
 Plug 'tpope/vim-dotenv'
 Plug 'mg979/vim-visual-multi'
+Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 if has('nvim')
     Plug 'sindrets/diffview.nvim'
 endif
@@ -54,7 +55,7 @@ set ru           " 第幾行第幾個字
 set nu           " 顯示行號
 set smartindent  " 設定 smartindent
 set confirm      " 操作過程有衝突時，以明確的文字來詢問
-colorscheme torte
+colorscheme moonfly
 
 " memory localvimrc setting
 let g:localvimrc_persistent = 2
@@ -125,7 +126,7 @@ nnoremap <silent> <leader>o :CocCommand editor.action.organizeImport<CR>
 nnoremap <silent> <leader>sd :call ShowDocumentation()<CR>
 nmap <leader>q  <Plug>(coc-codeaction-cursor)
 
-" code navigation 
+" code navigation
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gt <Plug>(coc-type-definition)
@@ -168,5 +169,5 @@ noremap <silent> <leader>dc :call vimspector#ClearBreakpoints()<CR>
 
 " diffview
 if has('nvim')
-    vnoremap <silent> <leader>h :DiffviewFileHistory<CR> 
+    vnoremap <silent> <leader>h :DiffviewFileHistory<CR>
 endif
