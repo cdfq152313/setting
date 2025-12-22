@@ -6,6 +6,7 @@ set scrolloff=5
 set surround
 set ReplaceWithRegister
 set easymotion
+set multiple-cursors
 
 " home/end/pageup/pagedown
 nmap H <Action>(EditorLineStart)
@@ -54,10 +55,9 @@ vmap z <Action>(EditorUnSelectWord)
 " multiple cursor
 nmap <A-k> <Action>(EditorCloneCaretAbove)
 nmap <A-j> <Action>(EditorCloneCaretBelow)
-vmap n <Action>(FindNext)
-vmap N <Action>(FindPrevious)
-vmap m <Action>(SelectNextOccurrence)
-vmap M <Action>(UnselectPreviousOccurrence)
+vmap n <Plug>NextOccurrence
+vmap N <Plug>RemoveOccurrence
+vmap m <Plug>SkipOccurrence
 
 " common action
 map <leader>a <Action>(Annotate)
@@ -76,17 +76,13 @@ map <leader>dd <Action>(Debug)
 map <leader>ds <Action>(Stop)
 map <leader>db <Action>(ToggleLineBreakpoint)
 
-" code navigation
-map <leader>ni <Action>(GotoImplementation)
-map <leader>ns <Action>(GotoSuperMethod)
-
 " easy motion
 map f <Plug>(easymotion-sn)
 
 " split left/right shrink
 nmap <tab> <Action>(NextSplitter)
 nmap \ <Action>(MoveTabRight)
-nmap <leader>\ <Action>(OpenInRightSplit)
+" nmap <leader>\ <Action>(OpenInRightSplit)
 nmap <S-\> <Action>(Unsplit)
 nmap - <Action>(MoveTabDown)
 nmap _ <Action>(Unsplit)

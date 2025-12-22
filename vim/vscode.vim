@@ -36,11 +36,10 @@ vmap z editor.action.smartSelect.shrink
 
 " multiple cursor
 vmap n editor.action.addSelectionToNextFindMatch
-vmap N editor.action.addSelectionToPreviousFindMatch
-vmap q editor.action.moveSelectionToNextFindMatch
-vmap Q editor.action.moveSelectionToPreviousFindMatch
+vmap N editor.action.moveSelectionToPreviousFindMatch
+vmap m editor.action.moveSelectionToNextFindMatch
 
-" common action 
+" common action
 map <leader>a :vsc gitlens.toggleFileBlame<CR>
 map <leader>r :vsc editor.action.rename<CR>
 map <leader>f :vsc editor.action.formatDocument<CR>
@@ -82,7 +81,7 @@ map <leader>sd :vsc editor.action.showHover<CR>
 map <leader>sp :vsc editor.action.triggerParameterHints<CR>
 map <leader>sf :vsc workbench.action.gotoSymbol<CR>
 
-" open sidebar 
+" open sidebar
 map <leader>wc :vsc workbench.action.chat.open<CR>
 map <leader>we :vsc workbench.view.explorer<CR>
 map <leader>wg :vsc workbench.view.scm<CR>
