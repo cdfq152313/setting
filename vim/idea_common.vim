@@ -27,13 +27,8 @@ if &ide =~? 'JetBrains Rider'
 endif
 
 " not copy action
-noremap D "_d
-noremap DD "_dd
-noremap C "_c
 noremap x "_x
-noremap X "_X
 noremap s "_s
-noremap S "_S
 vmap p gr
 
 " tab
@@ -44,11 +39,12 @@ vmap < <Action>(EditorUnindentSelection)
 map / <Action>(Find)
 
 " surround
-vnoremap " "zc"<C-R>z"<Esc>
-vnoremap ' "zc'<C-R>z'<Esc>
-vnoremap ( "zc(<C-R>z)<Esc>
-vnoremap [ "zc[<C-R>z]<Esc>
-vnoremap { "zc{<C-R>z}<Esc>
+vmap S <Plug>VSurround
+vmap " S"
+vmap ' S'
+vmap ( S(
+vmap [ S[
+vmap { S{
 vmap a <Action>(EditorSelectWord)
 vmap z <Action>(EditorUnSelectWord)
 
