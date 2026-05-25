@@ -1,106 +1,62 @@
 ---
 name: renpy-tl
-description: Translate and revise Ren'Py `.rpy` localization files into Traditional Chinese.
+description: 翻譯 Renpy 為正體中文，並提供翻譯進度管理工具。
 ---
 
-# Ren'Py Traditional Chinese Translation
+# 翻譯 Renpy 為正體中文
 
-## Hard Rules
+## 核心規則
+1. 不要修改到註解或是字串編號。
+2. 專有名詞 (如人名) 請保留，不要進行翻譯。
+3. 不要調用外部翻譯工具，直接翻譯文本。
 
-1. Translate target user-facing text into Traditional Chinese.
-2. Preserve proper nouns such as character and place names in their original form unless the user provides an explicit approved translation or glossary.
-3. Preserve all Ren'Py/Python syntax and inline tokens exactly, including `[name]`, `{w=.3}`, `{i}`, `{color=#...}`, `{#...}`, escaped braces, interpolation, and embedded Python expressions.
-4. Translate directly from the provided text. Do not call external translation tools or translation services.
+## 使用者指定翻譯 .rpy 檔
+1. 執行 skill script `scripts/check.py`（使用 `--short`）找到第一行尚未翻譯的位置，從該位置續翻。
+2. 一次翻譯 1000 行（請自行處理邊界問題），完成後回到步驟 1 繼續翻譯下一批行，直到整份檔案翻譯完成。
+3. 忽略註釋行號，註釋行號必定非實際行號。
+4. 檔案翻譯完成後，執行 skill script `scripts/check.py` 確認是否仍有未翻譯的行。
+5. 直到檔案翻譯完成才停止，禁止翻譯一個區塊就停止。
 
-## Editing Procedure
+## 使用者指定翻譯自進度檔
 
-1. In ordinary `translate <language> <id>:` dialogue blocks, leave the `#` source line untouched and translate only the corresponding uncommented dialogue string.
-2. In `translate <language> strings:` blocks, leave each `old` value untouched and translate only the matching `new` value.
-3. Before finishing, verify that only target translation strings changed.
+若使用者指定進度檔`batch-xxx.md` 則
 
-## Translation Chunk Size
+1. 讀取進度檔，找到第一個未完成的檔案開始翻譯。
+2. 請逐檔翻譯，不要一次翻譯多個檔案。
+3. 翻譯步驟同上方`使用者指定翻譯 .rpy 檔`。
+4. 當整份檔案翻譯完成後，將進度檔標記為已完成。
 
-1. For dialogue or scene translation, process one coherent scene or up to 50 target strings per translation chunk, whichever comes first.
-2. For short UI or system-text entries in `translate ... strings:` blocks, process up to 100 `new` values per translation chunk.
-3. A translation chunk is an internal progress unit, not a stopping point that requires user confirmation.
+## 專案初始化
+當使用者要求初始化翻譯進度時：
+1. 掃描使用者指定的範圍內的 `.rpy`
+2. 創建指定數量的 `progress/batch-xxx.md` 進度表。
+3. 將每個發現的 `.rpy` 文件分配給一個批次，盡可能平衡估計的翻譯工作量。
 
-## Progress Modes
+## 進度檔格式
 
-### Initialize Progress
+進度檔 `batch-xxx.md` 的格式如下：
 
-When the user asks to initialize translation progress:
-
-1. Scan the user-specified scope for target `.rpy` files.
-2. Create the requested number of `progress/batch-xxx.md` files.
-3. Assign every discovered `.rpy` file to exactly one batch, balancing estimated translation work when practical.
-4. Include one progress-table row per assigned file, with `Status` set to `not started` and `Resume Point` set to `line 1`.
-5. During initialization, create or edit only progress files. Do not translate or modify `.rpy` files.
-
-### Translate From Progress
-
-When the user asks to translate a `progress/batch-xxx.md` file:
-
-1. Read the specified batch file and edit only its assigned `.rpy` files and that batch file.
-2. Repeatedly translate the next unfinished translation chunk according to the translation chunk-size rules above.
-3. After each completed chunk, update the batch file row for the current `.rpy` file:
-   - Set `Status` to `in progress`.
-   - Set `Resume Point` to `line N`, where `N` is the next physical line to inspect.
-4. After completing all target strings in an assigned `.rpy` file, set its `Status` to `completed` and its `Resume Point` to `completed`, then continue with the next unfinished assigned file.
-5. Do not pause to ask whether to continue after completing a chunk or a file.
-6. Stop only when all assigned files are completed, the user requests a stop, a blocking ambiguity requires user input, or execution limits prevent continuing safely.
-7. When stopping before the batch is complete, ensure the latest completed chunk has been recorded in the batch file and report the next resume point in the same format, such as `line 240`.
-8. Do not edit files or progress records assigned to another batch.
-
-### Batch File Format
-
-Use this format for each `progress/batch-xxx.md` file:
-
-````markdown
+```markdown
 # Translation Progress: batch-001
 
-## Assigned Files
-
-| Status | File | Resume Point |
-| --- | --- | --- |
-| not started | `game/day1.rpy` | line 1 |
-| in progress | `game/day2.rpy` | line 240 |
-| completed | `game/day3.rpy` | completed |
-````
-
-Each assigned `.rpy` file must have exactly one row.
-
-### Progress Status Rules
-
-Use exactly one of these status values for each assigned file:
-
-- `not started`: no target strings in this file have been translated yet. Set `Resume Point` to `line 1`.
-- `in progress`: some target strings have been translated, but the file is not complete. Set `Resume Point` to the next physical line number to inspect, formatted as `line N`.
-- `completed`: all target strings in this file have been translated. Set `Resume Point` to `completed`.
-
-Line numbers are 1-based physical file line numbers, matching `nl -ba <file>`. After each completed translation chunk, update the progress file so the resume point is the first line after the last safely completed translated block.
-
-## Examples
-
-### Dialogue Translation Block
-
-Translate only the final uncommented string. Keep `Cole`, the source comment, the label, and `{w=.3}` unchanged.
-
-```renpy
-# game/mini_episodes/MFF_build.rpy:9
-translate Schinese episode_MFF_ca744f3e:
-
-    # "Usually being surrounded by half-naked men was more exciting than this,{w=.3} Cole mused."
-    "通常被一群半裸的男人圍著應該比現在更刺激才對，{w=.3} Cole 心想。"
+- [x] game/day1.rpy
+- [ ] game/day2.rpy
 ```
 
-### String Table
 
-Translate only `new`. Keep `old` and the location comment unchanged.
+## Available scripts
 
-```renpy
-translate tChinese strings:
+### `scripts/check.py` — 檢查翻譯完成度
 
-    # game/day1.rpy:281
-    old "Huh? That's not my name."
-    new "咦？那不是我的名字。"
+執行:
+
+```bash
+python3 scripts/check.py <current-file> --proper-nouns-file <project-root>/names.txt` --short
 ```
+
+用法:
+- `<project-root>` 是目標 Ren'Py 專案根目錄
+- `names.txt` 是專案根目錄下的換行分隔的專有名詞允許列表文件，每行一個名稱，並可選擇性地包含 `#` 注釋。
+    - 如果 `names.txt` 不存在，工具應該創建一個空文件並繼續運行。
+    - 如果未解決的候選詞是應保持不翻譯的專有名詞，僅將這些專有名詞附加到 `<project-root>/names.txt`，然後重新運行檢查器。
+- `--short` 選項將輸出統計摘要，最多顯示前 5 條未翻譯的項目。
