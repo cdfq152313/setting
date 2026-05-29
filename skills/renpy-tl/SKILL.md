@@ -7,15 +7,18 @@ description: 翻譯 Renpy 為正體中文，並提供翻譯進度管理工具。
 
 ## 核心規則
 1. 不要修改到註解或是字串編號。
-2. 專有名詞 (如人名) 請保留，不要進行翻譯。
-3. 不要調用外部翻譯工具，直接翻譯文本。
+2. 保留專有名詞 (如人名、地名等)，不要進行翻譯。
+3. 保留 Ren’Py 標籤和變數，例如: {i} {/i} {w=.3} {cps=20} [name] %(value)s
+4. 不要調用外部翻譯工具，直接翻譯文本。
 
 ## 使用者指定翻譯 .rpy 檔
-1. 執行 skill script `scripts/check.py`（使用 `--short`）找到第一行尚未翻譯的位置，從該位置續翻。
-2. 一次翻譯 1000 行（請自行處理邊界問題），完成後回到步驟 1 繼續翻譯下一批行，直到整份檔案翻譯完成。
-3. 忽略註釋行號，註釋行號必定非實際行號。
-4. 檔案翻譯完成後，執行 skill script `scripts/check.py` 確認是否仍有未翻譯的行。
-5. 直到檔案翻譯完成才停止，禁止翻譯一個區塊就停止。
+1. 執行本 skill 內部工具 `scripts/extract.py` 以獲取未翻譯的文本，limit 請不要低於 100 行，以確保翻譯效率。
+2. 翻譯後直接取代該行。
+3. 若該行不需要翻譯(如僅出現人名、或僅有控制碼等)，請在該行行尾添加註解 `# i18n: skip`。範例如下
+    ```rpy
+    new "Harry" # i18n: skip
+    ```
+4. 重複上述步驟直到整個檔案翻譯完成。
 
 ## 使用者指定翻譯自進度檔
 
@@ -44,19 +47,24 @@ description: 翻譯 Renpy 為正體中文，並提供翻譯進度管理工具。
 ```
 
 
-## Available scripts
+## Skill 內部工具
 
-### `scripts/check.py` — 檢查翻譯完成度
+### `scripts/extract.py` — 提取未翻譯文本
 
-執行:
-
-```bash
-python3 scripts/check.py <current-file> --proper-nouns-file <project-root>/names.txt` --short
+用法如下
+```
+python3 <skill-dir>/scripts/extract.py <current-file> --limit 100
 ```
 
-用法:
-- `<project-root>` 是目標 Ren'Py 專案根目錄
-- `names.txt` 是專案根目錄下的換行分隔的專有名詞允許列表文件，每行一個名稱，並可選擇性地包含 `#` 注釋。
-    - 如果 `names.txt` 不存在，工具應該創建一個空文件並繼續運行。
-    - 如果未解決的候選詞是應保持不翻譯的專有名詞，僅將這些專有名詞附加到 `<project-root>/names.txt`，然後重新運行檢查器。
-- `--short` 選項將輸出統計摘要，最多顯示前 5 條未翻譯的項目。
+重點提要:
+- <skill-dir> 是包含此 `SKILL.md` 的目錄
+- `<current-file>` 是當前正在翻譯的 `.rpy` 文件的路徑。
+- `--limit` 參數指定要提取的未翻譯文本行的最大數量。
+
+輸出格式為 `行號: 文本`，其中行號為原始 `.rpy` 文件中的行號，文本為該行的內容。範例如下:
+
+```
+7: MC "I think I'll go ahead and read some of the book I got from Coach."
+13: MC "Let's see here. Chapter one..."
+28: new "Harry"
+```
