@@ -78,11 +78,8 @@ def apply_replacements(path: Path, replacements: List[Replacement]) -> int:
         body = original[:-1] if ending else original
         stripped = body.strip()
 
-        # Basic guard: avoid writing onto blank lines by mistake.
         if not stripped:
             raise ValueError(f"Refuse to replace blank line at {path}:{line_no}.")
-
-        # Avoid breaking block structure or metadata comments.
         if stripped.startswith("#"):
             raise ValueError(f"Refuse to replace comment line at {path}:{line_no}.")
         if body.startswith("translate"):

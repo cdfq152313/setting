@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ren'Py TL Manager"
+  short_description: "Plan and verify Ren'Py translation progress"
+  default_prompt: "Use $renpy-tl-manager to initialize, assign, and verify Ren'Py translation progress across files."

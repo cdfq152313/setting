@@ -65,7 +65,6 @@ def parse_dialogue_block(
             continue
 
         if stripped.startswith("#"):
-            # Skip location markers like: # game/foo.rpy:123
             if SOURCE_LOC_COMMENT_RE.match(stripped):
                 continue
             source_lines.append(stripped[1:].strip())
@@ -110,8 +109,6 @@ def parse_strings_block(
 
         target_text = new_m.group(1)
         trailing_comment = new_m.group(2) or ""
-        # Any explicit trailing comment on `new` means this line has been
-        # intentionally touched (e.g. skip/notes), so do not extract again.
         if source_text == target_text and not trailing_comment.strip():
             out.append((j + 1, lines[j].strip()))
 

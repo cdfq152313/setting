@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ren'Py TL Worker"
+  short_description: "Translate individual Ren'Py script files"
+  default_prompt: "Use $renpy-tl-worker to translate one Ren'Py .rpy file while preserving labels, placeholders, and formatting."

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ren'Py Translation"
-  short_description: "Edit Ren'Py translation scripts safely"
-  default_prompt: "Use $renpy-tl to edit Ren'Py translation files while preserving labels, placeholders, and formatting."
