@@ -14,58 +14,21 @@ description: 管理 Ren'Py 正體中文翻譯專案的進度檔、檔案分派�
 
 ## 管理規則
 
-1. 不要直接翻譯文本；manager 只負責安排、驗收與更新進度。
-2. 依 `progress.md` 的順序，由上而下處理未完成項目。
-3. 每個子代理一次只處理一個 `.rpy` 檔案，並明確要求使用 `$renpy-tl-worker`。
-4. 若使用者沒有指定子代理數量，預設同時啟用最多 2 個子代理。
-5. 若使用者沒有指定要翻譯多少個檔案，預設只處理 2 個尚未完成的檔案。
-6. 子代理一旦回報完成，主代理必須立刻 review 與驗收該檔案，不要等待其他子代理全部結束。
-7. 只有在驗收確認檔案已完成後，才能將 `progress.md` 對應項目標記為 `[x]`。
-8. 驗收失敗時，該檔案不得標記為完成，也不得改派其他檔案；必須依驗收結果處理同一檔案。
-9. 一個子代理完成並通過驗收後，就關閉該子代理；不要重複利用同一個子代理去接下一個檔案。
+1. 依 `progress.md` 的順序，由上而下處理未完成項目。
+2. 每個子代理一次只處理一個 `.rpy` 檔案，並明確要求使用 `$renpy-tl-worker`。
+3. 若使用者沒有指定子代理數量，預設同時啟用最多 2 個子代理。
+4. 若使用者沒有指定要翻譯多少個檔案，預設只處理 2 個尚未完成的檔案。
+5. 子代理一旦回報完成，主代理必須立刻 review 與驗收該檔案，不要等待其他子代理全部結束。
 
-## Translation Guide 管理
+## 禁止事項
 
-1. 若專案根目錄存在 `translation-guide.md`，分派子代理時必須告知 worker 先讀取該檔。
-2. manager 負責維護 `translation-guide.md`；worker 不得自行修改。
-3. 子代理回報「建議加入 translation-guide.md 的項目」時，manager 應在驗收通過後統一 review。
-4. 可加入任何能提升後續翻譯一致性與正確性的資訊，例如：
-   - 譯名與術語
-   - 角色稱呼與語氣
-   - 人物關係
-   - 劇情設定
-   - 世界觀資訊
-   - 特殊翻譯決策
-5. 僅記錄可重複利用且具有長期價值的資訊；不要記錄單次場景或一次性的劇情細節。
-6. 若建議項目與既有 guide 衝突，保留既有 guide，並在回報中列出衝突。
-7. translation-guide.md 的格式不需預先固定；manager 應根據內容自行整理為清晰、易讀且便於後續維護的結構。
-
-## 子代理輪替與交接
-
-1. 本節只適用於驗收結果為 `NEXT_ACTION=worker_continue` 的情況。
-2. 初次分派不計入「繼續」次數；每次驗收結果為 `NEXT_ACTION=worker_continue` 並要求同一子代理繼續時，該檔案的繼續次數加 1。
-3. 同一子代理在同一檔案上最多繼續 2 次；若第 2 次繼續後仍未完成，manager 必須要求該子代理回報交接資訊，再關閉它。
-4. 交接資訊必須包含：
-   - 目前處理的 `.rpy` 檔案
-   - 建議加入 `translation-guide.md` 的項目；若沒有則寫「無」
-   - 新子代理需要注意的角色稱呼、術語、語氣或上下文決策
-5. worker 不得自行修改 `translation-guide.md`；manager review 交接資訊後，僅將具長期價值的項目寫入 guide。
-6. 重開子代理不代表該檔案失敗；新子代理必須重新讀取 `translation-guide.md`，依 `$renpy-tl-worker` 工作流程重新執行 `extract.py`，並從目前檔案狀態繼續處理同一檔案。
-
-## 初始化進度檔
-
-使用 `scripts/build_progress.py` 掃描指定範圍內的 `.rpy`，並建立 `<project-root>/progress.md`。
-
-用法：
-
-```bash
-python3 <skill-dir>/scripts/build_progress.py <scan-path>... --project-root <project-root>
-```
-
-重點：
-- `<scan-path>` 可以是單一 `.rpy`、資料夾，或多個混合輸入。
-- `progress.md` 預設寫到 `<project-root>/progress.md`。
-- 進度檔中的路徑必須使用相對於 `<project-root>` 的相對路徑。
+1. manager 不得直接翻譯文本；翻譯只能交由 `$renpy-tl-worker`。
+2. 未通過驗收的檔案不得在 `progress.md` 標記為 `[x]`。
+3. 驗收失敗的檔案不得改派其他檔案；必須依驗收結果處理同一檔案。
+4. 子代理完成並通過驗收後，不得重複使用同一子代理處理下一個檔案。
+5. `NEXT_ACTION=manager_fix_structure` 時，不得要求原 worker 繼續或修正；manager 必須關閉該 worker，修復結構後重新驗收。
+6. 同一 worker 在同一檔案上繼續 2 次後仍未完成時，不得再次要求它繼續；必須要求交接回報後關閉。
+7. worker 不得修改 `progress.md` 或 `translation-guide.md`。
 
 ## 依進度檔分派工作
 
@@ -104,6 +67,49 @@ python3 <skill-dir>/scripts/validation.py <project-root>/<relative-file> --git-b
 - 每次處理完 `validation.py` 指示的動作後，都必須重新執行 `validation.py`；只有 `NEXT_ACTION=mark_complete` 可以更新 `progress.md`。
 - 驗收通過後要立刻更新 `progress.md`，不要等到整批檔案都完成才一起更新。
 - 驗收通過後，若子代理回報了建議加入 `translation-guide.md` 的項目，manager 應 review 並視情況更新 guide。
+
+## 子代理輪替與交接
+
+1. 本節只適用於驗收結果為 `NEXT_ACTION=worker_continue` 的情況。
+2. 初次分派不計入「繼續」次數；每次驗收結果為 `NEXT_ACTION=worker_continue` 並要求同一子代理繼續時，該檔案的繼續次數加 1。
+3. 同一子代理在同一檔案上最多繼續 2 次；若第 2 次繼續後仍未完成，manager 必須要求該子代理回報交接資訊，再關閉它。
+4. 交接資訊必須包含：
+   - 目前處理的 `.rpy` 檔案
+   - 建議加入 `translation-guide.md` 的項目；若沒有則寫「無」
+   - 新子代理需要注意的角色稱呼、術語、語氣或上下文決策
+5. worker 不得自行修改 `translation-guide.md`；manager review 交接資訊後，僅將具長期價值的項目寫入 guide。
+6. 重開子代理不代表該檔案失敗；新子代理必須重新讀取 `translation-guide.md`，依 `$renpy-tl-worker` 工作流程重新執行 `extract.py`，並從目前檔案狀態繼續處理同一檔案。
+
+## Translation Guide 管理
+
+1. 若專案根目錄存在 `translation-guide.md`，分派子代理時必須告知 worker 先讀取該檔。
+2. manager 負責維護 `translation-guide.md`；worker 不得自行修改。
+3. 子代理回報「建議加入 translation-guide.md 的項目」時，manager 應在驗收通過後統一 review。
+4. 可加入任何能提升後續翻譯一致性與正確性的資訊，例如：
+   - 譯名與術語
+   - 角色稱呼與語氣
+   - 人物關係
+   - 劇情設定
+   - 世界觀資訊
+   - 特殊翻譯決策
+5. 僅記錄可重複利用且具有長期價值的資訊；不要記錄單次場景或一次性的劇情細節。
+6. 若建議項目與既有 guide 衝突，保留既有 guide，並在回報中列出衝突。
+7. translation-guide.md 的格式不需預先固定；manager 應根據內容自行整理為清晰、易讀且便於後續維護的結構。
+
+## 初始化進度檔
+
+使用 `scripts/build_progress.py` 掃描指定範圍內的 `.rpy`，並建立 `<project-root>/progress.md`。
+
+用法：
+
+```bash
+python3 <skill-dir>/scripts/build_progress.py <scan-path>... --project-root <project-root>
+```
+
+重點：
+- `<scan-path>` 可以是單一 `.rpy`、資料夾，或多個混合輸入。
+- `progress.md` 預設寫到 `<project-root>/progress.md`。
+- 進度檔中的路徑必須使用相對於 `<project-root>` 的相對路徑。
 
 ## 調度範例
 
