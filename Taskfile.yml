@@ -27,6 +27,31 @@ tasks:
     deps:
       - nu_shell
       - zsh_shell
+      - skills
+
+  skills:
+    desc: Link the skills folder into ~/.agents/skills.
+    deps:
+      - win_skills
+      - unix_skills
+
+  win_skills:
+    internal: true
+    platforms:
+      - windows
+    cmds:
+      - mkdir "%USERPROFILE%\.agents" 2>nul
+      - if exist "%USERPROFILE%\.agents\skills" rmdir /s /q "%USERPROFILE%\.agents\skills"
+      - mklink /D "%USERPROFILE%\.agents\skills" "{{.TASKFILE_DIR}}\skills"
+
+  unix_skills:
+    internal: true
+    platforms:
+      - linux
+      - darwin
+    cmds:
+      - mkdir -p ~/.agents
+      - ln -sfn {{.TASKFILE_DIR}}/skills ~/.agents/skills
 
   win_dep:
     internal: true
