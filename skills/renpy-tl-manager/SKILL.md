@@ -44,7 +44,7 @@ description: 管理 Ren'Py 正體中文翻譯專案的進度檔、檔案分派�
     - 不得修改 `translation-guide.md`
     - 依 `$renpy-tl-worker` 工作流程執行 `extract.py` 時，`--limit` 不得低於 100
     - 完成後立即回報
-6. 子代理模型固定使用 `gpt-5.4-mini (Reasoning Medium)`，除非使用者明確要求其他配置。
+6. 子代理模型固定使用 `gpt-5.6-luna (Reasoning Medium)`，除非使用者明確要求其他配置。
 7. 當任一子代理回報完成時，立刻執行驗收流程。
 8. 若驗收結果為 `NEXT_ACTION=manager_fix_structure`，manager 修復結構問題並關閉造成該結果的 worker；修復後重新驗收同一檔案。
 9. 若驗收結果為 `NEXT_ACTION=worker_continue`，依「子代理輪替與交接」處理同一檔案，不要用下一個檔案取代它；要求同一 worker 繼續時，續工提示只說明仍有未翻譯文本。
