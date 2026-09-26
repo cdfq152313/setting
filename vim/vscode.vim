@@ -4,26 +4,27 @@ noremap L $
 noremap K {
 noremap J }
 
+" j
+nnoremap <leader>j J
+vnoremap <leader>j J
+nnoremap <leader>J gJ
+vnoremap <leader>J gJ
+
 " Redo undo
 nnoremap u :vsc undo<CR>
 nnoremap U :vsc redo<CR>
 
 " not copy action
-noremap D "_d
-noremap DD "_dd
-noremap C "_c
 noremap x "_x
-noremap X "_X
 noremap s "_s
-noremap S "_S
 vnoremap p pgvy
 
 " indent/outdent
-vmap > :vsc editor.action.indentLines<CR>
-vmap < :vsc editor.action.outdentLines<CR>
+vnoremap > :vsc editor.action.indentLines<CR>
+vnoremap < :vsc editor.action.outdentLines<CR>
 
 " search
-map / :vsc actions.find<CR>
+nnoremap / :vsc actions.find<CR>
 
 " surround
 vmap " S"
@@ -31,58 +32,56 @@ vmap ' S'
 vmap ( S(
 vmap [ S[
 vmap { S{
-vmap a editor.action.smartSelect.expand
-vmap z editor.action.smartSelect.shrink
+vnoremap a editor.action.smartSelect.expand
+vnoremap z editor.action.smartSelect.shrink
 
 " multiple cursor
-vmap n editor.action.addSelectionToNextFindMatch
-vmap N editor.action.moveSelectionToPreviousFindMatch
-vmap m editor.action.moveSelectionToNextFindMatch
+vnoremap n editor.action.addSelectionToNextFindMatch
+vnoremap N editor.action.moveSelectionToPreviousFindMatch
+vnoremap m editor.action.moveSelectionToNextFindMatch
 
 " common action
-map <leader>a :vsc gitlens.toggleFileBlame<CR>
-map <leader>r :vsc editor.action.rename<CR>
-map <leader>f :vsc editor.action.formatDocument<CR>
-map <leader>o :vsc editor.action.organizeImports<CR>
-map <leader>h :vsc gitlens.views.lineHistory.focus<CR>
-map <leader>q :vsc editor.action.quickFix<CR>
+nnoremap <leader>a :vsc gitlens.toggleFileBlame<CR>
+nnoremap <leader>r :vsc editor.action.rename<CR>
+nnoremap <leader>f :vsc editor.action.formatDocument<CR>
+nnoremap <leader>o :vsc editor.action.organizeImports<CR>
+nnoremap <leader>h :vsc gitlens.views.lineHistory.focus<CR>
+vnoremap <leader>h :vsc gitlens.views.lineHistory.focus<CR>
+nnoremap <leader>q :vsc editor.action.quickFix<CR>
+nnoremap <leader>w :vsc workbench.action.openView<CR>
 
 " build/run/debug
-map <leader>dd :vsc workbench.action.debug.start<CR>
-map <leader>ds :vsc workbench.action.debug.stop<CR>
-map <leader>db :vsc editor.debug.action.toggleBreakpoint<CR>
+nnoremap <leader>dd :vsc workbench.action.debug.start<CR>
+nnoremap <leader>ds :vsc workbench.action.debug.stop<CR>
+nnoremap <leader>db :vsc editor.debug.action.toggleBreakpoint<CR>
 
 " test
-map <leader>t :vsc pytest-runner.run-test<CR>
-map <leader>dt :vsc pytest-runner.run-test-docker<CR>
-map <leader>T :vsc pytest-runner.run-module-test<CR>
-map <leader>dT :vsc pytest-runner.run-module-test-docker<CR>
+nnoremap <leader>t :vsc pytest-runner.run-test<CR>
+nnoremap <leader>dt :vsc pytest-runner.run-test-docker<CR>
+nnoremap <leader>T :vsc pytest-runner.run-module-test<CR>
+nnoremap <leader>dT :vsc pytest-runner.run-module-test-docker<CR>
 
 " code navigation
-nmap gr :vsc references-view.findReferences<CR>
-nmap gi :vsc editor.action.goToImplementation<CR>
-nmap [d :vsc editor.action.marker.prev<CR>
-nmap [D :vsc editor.action.marker.prevInFiles<CR>
-nmap ]d :vsc editor.action.marker.next<CR>
-nmap ]D :vsc editor.action.marker.nextInFiles<CR>
+nnoremap gd :vsc editor.action.revealDefinition<CR>
+nnoremap gr :vsc references-view.findReferences<CR>
+nnoremap gi :vsc editor.action.goToImplementation<CR>
+nnoremap [d :vsc editor.action.marker.prev<CR>
+nnoremap [D :vsc editor.action.marker.prevInFiles<CR>
+nnoremap ]d :vsc editor.action.marker.next<CR>
+nnoremap ]D :vsc editor.action.marker.nextInFiles<CR>
 
 " easy motion
-map f :vsc extension.aceJump.multiChar<CR>
+nnoremap f :vsc extension.aceJump.multiChar<CR>
 
 " split window
-nmap <leader>\ :vsc workbench.action.splitEditorToRightGroup<CR>
-nmap \ :vsc workbench.action.moveEditorToRightGroup<CR>
-nmap | :vsc workbench.action.joinAllGroups<CR>
-nmap - :vsc workbench.action.moveEditorToBelowGroup<CR>
-nmap _ :vsc workbench.action.moveEditorToAboveGroup<CR>
+nnoremap <leader>\ :vsc workbench.action.splitEditorToRightGroup<CR>
+nnoremap \ :vsc workbench.action.moveEditorToRightGroup<CR>
+nnoremap | :vsc workbench.action.joinAllGroups<CR>
+nnoremap - :vsc workbench.action.moveEditorToBelowGroup<CR>
+nnoremap _ :vsc workbench.action.moveEditorToAboveGroup<CR>
+nnoremap <leader>bo :vsc workbench.action.closeOtherEditors<CR>
 
 " show
-map <leader>sd :vsc editor.action.showHover<CR>
-map <leader>sp :vsc editor.action.triggerParameterHints<CR>
-map <leader>sf :vsc workbench.action.gotoSymbol<CR>
-
-" open sidebar
-map <leader>wc :vsc workbench.action.chat.open<CR>
-map <leader>we :vsc workbench.view.explorer<CR>
-map <leader>wg :vsc workbench.view.scm<CR>
-map <leader>wt :vsc workbench.action.terminal.toggleTerminal<CR>
+nnoremap <leader>sd :vsc editor.action.showHover<CR>
+nnoremap <leader>sp :vsc editor.action.triggerParameterHints<CR>
+nnoremap <leader>sf :vsc workbench.action.gotoSymbol<CR>

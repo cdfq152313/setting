@@ -29,13 +29,8 @@ Plug 'embear/vim-localvimrc'
 Plug 'vim-test/vim-test'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vim-which-key'
-Plug 'puremourning/vimspector'
-Plug 'tpope/vim-dotenv'
 Plug 'mg979/vim-visual-multi'
 Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
-if has('nvim')
-    Plug 'sindrets/diffview.nvim'
-endif
 call plug#end()
 
 " 編輯喜好設定
@@ -63,17 +58,30 @@ let g:localvimrc_persistent = 2
 " 改變leader key
 let g:mapleader = "\<Space>"
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
-nnoremap <silent> g :<c-u>WhichKey 'g'<CR>
 set timeoutlen=300
 
 " Move focus among window/spilt
-nnoremap <silent> <F2> :wincmd w<CR>
 nnoremap <silent> <S-F3> :tabprevious<CR>
-nnoremap <silent> <F3> :tabnext<CR>
-nnoremap <silent> <F4> :tabc<CR>
+nnoremap <silent> <leader>bb :Buffers<CR>
+nnoremap <silent> <leader>bd :bdelete<CR>
+nnoremap <silent> <leader>bl <C-^>
+nnoremap <silent> <leader>bo :call DeleteOtherBuffers()<CR>
+function! DeleteOtherBuffers() abort
+  let current = bufnr('%')
+
+  for buffer in getbufinfo({'buflisted': 1})
+    if buffer.bufnr != current && !buffer.changed
+      execute 'silent bdelete' buffer.bufnr
+    endif
+  endfor
+endfunction
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " Nerdtree
-nnoremap <silent> <leader>we :NERDTreeToggle<CR>
+nnoremap <silent> <F2> :NERDTreeToggle<CR>
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 " Close the tab if NERDTree is the only window remaining in it.
@@ -81,26 +89,26 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 
 " ctrlp
 nnoremap <silent> <C-P> :Files<CR>
-nnoremap <silent> <leader>p :Commands<CR>
-nnoremap <silent> <F1> :Commands<CR>
+nnoremap <silent> <C-S-P> :Commands<CR>
 
 " home/end/pageup/pagedown
-map <silent> H ^
-map <silent> L $
+noremap H ^
+noremap L $
 noremap K {
 noremap J }
+
+" j
+nnoremap <leader>j J
+vnoremap <leader>j J
+nnoremap <leader>J gJ
+vnoremap <leader>J gJ
 
 " Redo undo
 nnoremap U <C-R>
 
 " not copy action
-noremap D "_d
-noremap DD "_dd
-noremap C "_c
 noremap x "_x
-noremap X "_X
 noremap s "_s
-noremap S "_S
 vnoremap p pgvy
 
 " nerdcommenter
@@ -129,10 +137,7 @@ nmap <leader>q  <Plug>(coc-codeaction-cursor)
 " code navigation
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-noremap <silent> gb <C-o>
-noremap <silent> gn <C-i>
 
 " coc-specific config
 " Make <CR> to accept selected completion item or notify coc.nvim to format
@@ -155,19 +160,3 @@ endfunction
 nnoremap <silent> <leader>t :TestNearest<CR>
 nnoremap <silent> <leader>T :TestFile<CR>
 nnoremap <silent> <leader>dt :call DebugNearest()<CR>
-
-" debugger
-let g:vimspector_install_gadgets = [ 'debugpy' ]
-noremap <silent> <F5> :call vimspector#Continue()<CR>
-noremap <silent> <leader>dq :call vimspector#Reset({ 'interactive': v:true })<CR>
-noremap <silent> <leader>db :call vimspector#ToggleBreakpoint()<CR>
-noremap <silent> <leader>ds :call vimspector#StepOver()<CR>
-noremap <silent> <leader>di :call vimspector#StepInto()<CR>
-noremap <silent> <leader>do :call vimspector#StepOut()<CR>
-noremap <silent> <leader>dr :call vimspector#RunToCursor()<CR>
-noremap <silent> <leader>dc :call vimspector#ClearBreakpoints()<CR>
-
-" diffview
-if has('nvim')
-    vnoremap <silent> <leader>h :DiffviewFileHistory<CR>
-endif
