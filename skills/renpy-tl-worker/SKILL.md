@@ -1,90 +1,63 @@
 ---
 name: renpy-tl-worker
-description: 將單一 Ren'Py 翻譯檔中的未翻譯文本翻成正體中文，並安全回寫指定行。當使用者要求翻譯單個 .rpy 檔、處理 manager 分派的檔案、保留 Ren'Py 標籤與變數、或需要檢查與回寫未翻譯行時使用。不要用於專案層級的進度安排或多檔案調度。
+description: 翻譯 manager 指定的單一 Ren'Py draft，並在不改動上下文與結構的前提下完成工作範圍。當使用者或 manager 要求處理一份 draft 時使用；不要用於專案排程、原始檔合併或多檔案調度。
 ---
 
-# 翻譯單一 Ren'Py 檔案
+# Ren'Py 翻譯 worker
 
-## 核心規則
+## 工作邊界
 
-1. 不要修改註解、字串編號、`translate` 區塊標頭，或任何與翻譯無關的結構。
-2. 保留專有名詞，例如人名、地名、組織名；不要擅自翻譯。
-3. 保留 Ren'Py 標籤和變數，例如 `{i}` `{/i}` `{w=.3}` `{cps=20}` `[name]` `%(value)s`。
-4. 不要調用外部翻譯工具；直接翻譯文本。
-5. 一次只處理單一 `.rpy` 檔案；若任務是整個專案的排程，交由 `$renpy-tl-manager` 負責。
+一次只處理 manager 指定的一份 `.rpy` draft。工作期間只可閱讀：
+
+1. 該份 draft；
+2. 專案根目錄的 `translation-guide.md`（若存在）。
+
+不得閱讀原始翻譯檔、其他 `.rpy`、`progress.md`、manifest 或其他專案檔案來補充上下文。draft 已包含 manager 指定數量的已翻譯上下文；不要因為想取得更多背景而擴大讀取範圍。
+
+不要修改原始檔、progress 或 guide。不要直接翻譯整個專案，也不要同時處理另一個檔案。
 
 ## 工作流程
 
-1. 若專案根目錄存在 `translation-guide.md`，先閱讀該檔案。
-2. 執行 `scripts/extract.py` 擷取未翻譯文本。`--limit` 不要低於 100，以維持翻譯效率。
-3. 逐行翻譯抽出的文本，並直接回寫到原始 `.rpy` 對應行。
-4. 若某行不需要翻譯，例如只有人名或只有控制碼，則在該行行尾加入 `# i18n: skip`。
-5. 重複抽取與回寫，直到 `scripts/extract.py` 已無輸出。
-6. 結束前再用 `--limit 100` 重新檢查一次，確認該檔案已無待翻譯內容。
+1. 先閱讀指定 draft；若 manager 提供 `translation-guide.md`，先閱讀它。
+2. 找到唯一一對 `# renpy-tl-draft: work-begin` 與 `# renpy-tl-draft: work-end`。標記外的內容是唯讀上下文，包含已翻譯單位、來源位置註解、`translate` 標頭與空白行。
+3. 只翻譯兩個標記之間的完整未翻譯單位。不要移動、刪除或修改兩個標記，也不要在 draft 中加入自己的註解或額外分隔線。
+4. 完成後使用 manager skill 提供的只讀 draft 驗證：
 
-## 跳過不需翻譯的行
+   ```bash
+   python3 <manager-skill-dir>/scripts/validation.py <draft-file> --worker
+   ```
 
-範例：
+   這個命令只讀 draft，不需要原始檔或 manifest。輸出 `NEXT_ACTION=worker_continue` 就繼續翻譯；輸出 `NEXT_ACTION=worker_done` 才回報 manager；輸出 `NEXT_ACTION=manager_fix_structure` 時不要修復標記或結構，直接回報 manager。
 
-```rpy
-new "Harry" # i18n: skip
-```
+## 翻譯與結構規則
 
-## 上下文理解
-
-1. 翻譯前應閱讀待翻譯行附近內容，以理解說話者、對象、語氣與劇情上下文。
-2. 預設閱讀待翻譯行前後約 20 行；若遇到代名詞、曖昧指稱、雙關語或依賴劇情理解的內容，可擴大閱讀範圍。
-3. 除非原文明確如此，避免無根據地增加、刪減或改寫語意。
-
-## 一致性來源
-
-1. 若專案根目錄存在 `translation-guide.md`，翻譯前必須先閱讀。
-2. `translation-guide.md` 內的譯名、稱呼、角色語氣與常用句優先於自行判斷。
-3. 不要為了一致性而掃描整個專案或大量舊翻譯；worker 只需參考：
-   - `translation-guide.md`
-   - 目前 `.rpy` 檔案附近上下文
-4. 若 guide 沒有記載，依目前檔案上下文翻譯。
-5. 若發現反覆出現但 guide 未記載的重要譯名、術語、角色稱呼或語氣規則，結束時在回報中列出，不要擅自修改 `translation-guide.md`。
-
-## 翻譯風格
-
-1. 使用自然、流暢的正體中文。
-2. 優先維持角色語氣、稱呼方式與情緒強度。
-3. 相同原文在相同語境下應盡量使用相同譯法。
-4. 不確定時，優先保守直譯，不要自行補充世界觀設定或角色背景。
+- 使用自然、流暢的正體中文，遵守 guide 中的譯名、稱呼、角色語氣與術語。
+- 保留原有專有名詞，除非 guide 或既有上下文指定譯法。
+- 保留 Ren'Py tag 與 placeholder，例如 `{i}`、`{/i}`、`{w=.3}`、`{cps=20}`、`[name]`、`%(value)s`；不可遺失、增加或改變其內容。
+- 保留引號、跳脫字元、縮排與每個翻譯單位的實體行數。不要把一行拆成多行，也不要把多行合併成一行。
+- 一般對話單位只修改翻譯文字行；不要修改來源註解、`translate` 標頭、字串 ID 或其他結構。
+- `translate ... strings:` 單位只修改對應的 `new` 文字；保留 `old`、來源位置註解與區塊結構。
+- 如果內容刻意維持原文，例如只有人名或只有不應翻譯的控制內容，在工作範圍內的目標文字行尾加入 `# i18n: skip`。不要為其他理由加入註解。
+- 不要呼叫外部翻譯工具，不要根據未讀取的專案內容自行補充設定。
 
 ## 完成回報
 
-結束時回報：
+回報以下內容：
 
-1. 已完成的 `.rpy` 檔案。
-2. 是否已用 `scripts/extract.py --limit 100` 確認無待翻譯內容。
-3. 建議加入 `translation-guide.md` 的項目；若沒有則寫「無」。
+1. 處理完成的 draft 路徑；
+2. `validation.py --worker` 的結果，是否為 `NEXT_ACTION=worker_done`；
+3. 尚未完成或無法判斷的單位（若有）；
+4. 建議加入 `translation-guide.md` 的長期資訊；若沒有則寫「無」。
+
+不要自行把 draft 合併回原始檔，也不要修改 progress。manager 會執行需要 manifest 與原始檔的完整驗證、合併及進度更新。
 
 ## 交接回報
 
 若 manager 要求交接後關閉，回報：
 
-1. 目前處理的 `.rpy` 檔案。
-2. 建議加入 `translation-guide.md` 的項目；若沒有則寫「無」。
-3. 新 worker 需要注意的角色稱呼、術語、語氣或上下文決策。
+1. 目前處理的 draft 路徑；
+2. 尚未完成的工作範圍或疑難單位；
+3. 角色稱呼、術語、語氣或上下文決策；
+4. 建議加入 guide 的項目；若沒有則寫「無」。
 
-## 內部工具
-
-### `scripts/extract.py`
-
-提取未翻譯文本。
-
-用法：
-
-```bash
-python3 <skill-dir>/scripts/extract.py <current-file> --limit 100
-```
-
-輸出格式：
-
-```text
-7: MC "I think I'll go ahead and read some of the book I got from Coach."
-13: MC "Let's see here. Chapter one..."
-28: new "Harry"
-```
+舊有的 `extract.py`、`replace.py` 是原始檔直接編輯流程的相容性工具，不是目前 draft 工作的必要步驟。

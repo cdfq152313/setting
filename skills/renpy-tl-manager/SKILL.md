@@ -1,141 +1,162 @@
 ---
 name: renpy-tl-manager
-description: 管理 Ren'Py 正體中文翻譯專案的進度檔、檔案分派與完成度驗收。當使用者要求初始化 progress.md、依進度檔安排翻譯順序、將多個 .rpy 分派給子代理、檢查哪些檔案尚未完成，或在整個專案層級追蹤翻譯進度時使用。
+description: 管理 Ren'Py 正體中文翻譯專案的進度、draft 切割、worker 分派、驗證與合併。當需要安排多個 .rpy 檔案、將單一檔案分批交給 worker，或驗收並回寫翻譯時使用；不要用於直接翻譯文本。
 ---
 
-# 管理 Ren'Py 翻譯進度
+# Ren'Py 翻譯 manager
 
-## 核心職責
+## 核心模型
 
-1. 初始化或重建 `<project-root>/progress.md`。
-2. 從進度檔挑出尚未完成的 `.rpy`，依序安排翻譯。
-3. 將單一檔案工作分派給 `$renpy-tl-worker` 子代理。
-4. 使用驗證腳本驗收檔案是否可標記完成，包含未翻譯文本與結構檢查。
+- `progress.md` 只記錄每個翻譯檔是否完成：`[ ]` 或 `[x]`。
+- 一個尚未完成檔案的暫時工作狀態由 `.renpy-tl/drafts/` 中的 manifest 表示，不要把 `worker_working`、`validation` 等操作狀態寫進 `progress.md`。
+- 同一個原始翻譯檔同時只能有一份 active draft 與一個 worker。draft 合併並清理前，不得為同一檔案建立下一份 draft。
+- manager 不直接翻譯文本；翻譯交給 `$renpy-tl-worker`。
 
-## 管理規則
+第一版假設翻譯是由檔案前方依序往後處理，且每次切割的是連續的完整翻譯單位。不要把任意實體行數當成切割邊界。
 
-1. 依 `progress.md` 的順序，由上而下處理未完成項目。
-2. 每個子代理一次只處理一個 `.rpy` 檔案，並明確要求使用 `$renpy-tl-worker`。
-3. 若使用者沒有指定子代理數量，預設同時啟用最多 2 個子代理。
-4. 若使用者沒有指定要翻譯多少個檔案，預設只處理 2 個尚未完成的檔案。
-5. 子代理一旦回報完成，主代理必須立刻 review 與驗收該檔案，不要等待其他子代理全部結束。
+## 檔案層級生命週期
 
-## 禁止事項
+對每個尚未完成檔案重複以下批次流程：
 
-1. manager 不得直接翻譯文本；翻譯只能交由 `$renpy-tl-worker`。
-2. 未通過驗收的檔案不得在 `progress.md` 標記為 `[x]`。
-3. 驗收失敗的檔案不得改派其他檔案；必須依驗收結果處理同一檔案。
-4. 子代理完成並通過驗收後，不得重複使用同一子代理處理下一個檔案。
-5. `NEXT_ACTION=manager_fix_structure` 時，不得要求原 worker 繼續或修正；manager 必須關閉該 worker，修復結構後重新驗收。
-6. 同一 worker 在同一檔案上繼續 2 次後仍未完成時，不得再次要求它繼續；必須要求交接回報後關閉。
-7. worker 不得修改 `progress.md` 或 `translation-guide.md`。
+`選檔 -> 找既有 draft 或切割 -> worker 翻譯 -> worker-only 驗證 -> manager 完整驗證 -> 合併 -> 驗證原檔 -> 清理 draft`
 
-## 依進度檔分派工作
+完成原檔驗證後，若仍有未翻譯單位，先移除或封存該批次的 `.rpy` 與 `.json`，再建立下一批。整個檔案通過完整驗證、輸出 `NEXT_ACTION=mark_complete` 後，才能把 `progress.md` 的項目改成 `[x]`。
 
-1. 讀取 `<project-root>/progress.md`，找出所有 `- [ ]` 項目。
-2. 依管理規則決定本輪要處理的檔案數量與同時啟用的子代理數量。
-3. 取出本輪目標檔案，並只保留最前面的指定數量。
-4. 初始派出 `min(子代理數量, 本輪檔案數量)` 個子代理，將本輪檔案依序分配出去。
-5. 每個子代理的提示都必須包含：
-    - 只能處理被分配的單一檔案
-    - 必須使用 `$renpy-tl-worker`
-    - 若存在 `translation-guide.md`，必須先讀取
-    - 不得修改 `progress.md`
-    - 不得修改 `translation-guide.md`
-    - 依 `$renpy-tl-worker` 工作流程執行 `extract.py` 時，`--limit` 不得低於 100
-    - 完成後立即回報
-6. 子代理模型固定使用 `gpt-5.6-luna (Reasoning Medium)`，除非使用者明確要求其他配置。
-7. 當任一子代理回報完成時，立刻執行驗收流程。
-8. 若驗收結果為 `NEXT_ACTION=manager_fix_structure`，manager 修復結構問題並關閉造成該結果的 worker；修復後重新驗收同一檔案。
-9. 若驗收結果為 `NEXT_ACTION=worker_continue`，依「子代理輪替與交接」處理同一檔案，不要用下一個檔案取代它；要求同一 worker 繼續時，續工提示只說明仍有未翻譯文本。
-10. 若驗收結果為 `NEXT_ACTION=mark_complete`，立即更新 `progress.md`、關閉該子代理，並在仍有剩餘待處理檔案時新開下一個子代理補上空缺。
-11. 重複上述節奏，直到本輪指定檔案全部驗收完成為止。
+## 調度規則
 
-## 驗收流程
+1. 依 `progress.md` 的順序處理 `- [ ]` 項目；不要跳過目前驗收失敗的檔案去處理同一批次的下一個檔案。
+2. 使用者沒有指定時，保留既有預設：本輪最多處理 2 個檔案，同時最多啟用 2 個 worker。worker 模型遵循使用者指定；未指定時使用目前預設的 `gpt-5.6-luna (Reasoning Medium)`。
+3. 不同檔案可以平行處理，但同一原始檔只能有一個 active manifest 與一個 worker。
+4. 建立 draft 前，掃描 `.renpy-tl/drafts/` 中的 JSON manifest：同一 `translation_file` 有一份就繼續它，有多份就停止並回報衝突，不要再切割。
+5. 驗收結果為 `worker_continue` 時，繼續同一 draft；不要用下一個檔案取代它。相同 worker 在同一檔案最多繼續 2 次，仍未完成時要求交接並關閉，然後讓新的 worker 重新閱讀 guide 後接手同一 draft。
+6. worker 不得修改 `progress.md` 或 `translation-guide.md`。manager 負責 review worker 回報中值得長期保存的 guide 建議。
 
-完成單一檔案後，使用本 skill 內的 `scripts/validation.py` 驗收：
+## 建立或繼續 draft
+
+若沒有 active manifest，使用：
 
 ```bash
-python3 <skill-dir>/scripts/validation.py <project-root>/<relative-file> --git-base HEAD
+python3 <skill-dir>/scripts/split_translation.py <translation-file> \
+  --project-root <project-root> \
+  --context-units <n> \
+  --work-units <m>
 ```
 
-規則：
-- `NEXT_ACTION=mark_complete`：才可將該檔案標記為完成。
-- `NEXT_ACTION=worker_continue`：仍有未翻譯文本；不要勾選 `[x]`，而是讓同一檔案繼續翻譯。
-- `NEXT_ACTION=manager_fix_structure`：manager 先修復結構問題，關閉造成該結果的 worker，修復後重新執行 `validation.py`。
-- 若 `validation.py` 回報 `NEXT_ACTION=manager_fix_structure`，但檢視對應行後確認內容正確，停止派發新的 worker，不要標記完成或要求 worker 修正；立即回報疑似 false positive、檔案、錯誤類型與行號，等待使用者決定。
-- 每次處理完 `validation.py` 指示的動作後，都必須重新執行 `validation.py`；只有 `NEXT_ACTION=mark_complete` 可以更新 `progress.md`。
-- 驗收通過後要立刻更新 `progress.md`，不要等到整批檔案都完成才一起更新。
-- 驗收通過後，若子代理回報了建議加入 `translation-guide.md` 的項目，manager 應 review 並視情況更新 guide。
+`n` 與 `m` 是完整翻譯單位數，不是實體行數。draft 會放在專案內的 `.renpy-tl/drafts/`，並鏡像原始檔案的相對路徑，例如：
 
-## 子代理輪替與交接
+```text
+game/tl/tChinese/day1.rpy
+.renpy-tl/drafts/game/tl/tChinese/day1.lines-00100-00200.rpy
+.renpy-tl/drafts/game/tl/tChinese/day1.lines-00100-00200.json
+```
 
-1. 本節只適用於驗收結果為 `NEXT_ACTION=worker_continue` 的情況。
-2. 初次分派不計入「繼續」次數；每次驗收結果為 `NEXT_ACTION=worker_continue` 並要求同一子代理繼續時，該檔案的繼續次數加 1。
-3. 同一子代理在同一檔案上最多繼續 2 次；若第 2 次繼續後仍未完成，manager 必須要求該子代理回報交接資訊，再關閉它。
-4. 交接資訊必須包含：
-   - 目前處理的 `.rpy` 檔案
-   - 建議加入 `translation-guide.md` 的項目；若沒有則寫「無」
-   - 新子代理需要注意的角色稱呼、術語、語氣或上下文決策
-5. worker 不得自行修改 `translation-guide.md`；manager review 交接資訊後，僅將具長期價值的項目寫入 guide。
-6. 重開子代理不代表該檔案失敗；新子代理必須重新讀取 `translation-guide.md`，依 `$renpy-tl-worker` 工作流程重新執行 `extract.py`，並從目前檔案狀態繼續處理同一檔案。
+draft 包含一段已翻譯上下文，以及由一對下列註解包住的待翻譯範圍：
 
-## Translation Guide 管理
+```text
+# renpy-tl-draft: work-begin
+...
+# renpy-tl-draft: work-end
+```
 
-1. 若專案根目錄存在 `translation-guide.md`，分派子代理時必須告知 worker 先讀取該檔。
-2. manager 負責維護 `translation-guide.md`；worker 不得自行修改。
-3. 子代理回報「建議加入 translation-guide.md 的項目」時，manager 應在驗收通過後統一 review。
-4. 可加入任何能提升後續翻譯一致性與正確性的資訊，例如：
-   - 譯名與術語
-   - 角色稱呼與語氣
-   - 人物關係
-   - 劇情設定
-   - 世界觀資訊
-   - 特殊翻譯決策
-5. 僅記錄可重複利用且具有長期價值的資訊；不要記錄單次場景或一次性的劇情細節。
-6. 若建議項目與既有 guide 衝突，保留既有 guide，並在回報中列出衝突。
-7. translation-guide.md 的格式不需預先固定；manager 應根據內容自行整理為清晰、易讀且便於後續維護的結構。
+不要在每個翻譯單位中加入額外標記；`translate ... strings:` 也使用相同的一對工作標記。manifest 第一版只記錄：
 
-## 初始化進度檔
+```json
+{
+  "translation_file": "game/tl/tChinese/day1.rpy",
+  "translation_file_lines": {"start": 100, "end": 200},
+  "work_lines": {"start": 150, "end": 200},
+  "draft_file": ".renpy-tl/drafts/game/tl/tChinese/day1.lines-00100-00200.rpy"
+}
+```
 
-使用 `scripts/build_progress.py` 掃描指定範圍內的 `.rpy`，並建立 `<project-root>/progress.md`。
+不需要 `version`、`part`、`context_units` 或 `assigned_units`。目前不使用 Git hash 或外部修改鎖定；流程假設 active draft 期間原始檔不被改動。
+如果翻譯來源整體更新到新的版本，不嘗試遷移舊 draft；先清除 `.renpy-tl/drafts/` 下的 draft 與 manifest，再重新切割。
 
-用法：
+## worker 分派與 worker-only 驗證
+
+分派時只把以下資料交給 worker：
+
+- 指定的 draft `.rpy` 路徑；
+- 專案根目錄的 `translation-guide.md`（若存在）；
+- 明確要求使用 `$renpy-tl-worker`，且不得閱讀原始翻譯檔、其他 `.rpy`、`progress.md` 或 manifest。
+
+worker 完成後可使用只讀 draft 的驗證：
 
 ```bash
-python3 <skill-dir>/scripts/build_progress.py <scan-path>... --project-root <project-root>
+python3 <skill-dir>/scripts/validation.py <draft-file> --worker
 ```
 
-重點：
-- `<scan-path>` 可以是單一 `.rpy`、資料夾，或多個混合輸入。
-- `progress.md` 預設寫到 `<project-root>/progress.md`。
-- 進度檔中的路徑必須使用相對於 `<project-root>` 的相對路徑。
+這個模式不讀取原始檔或 manifest：
 
-## 調度範例
+- `NEXT_ACTION=worker_continue`：仍有未翻譯單位或 placeholder/tag 不一致，worker 繼續同一 draft；
+- `NEXT_ACTION=worker_done`：draft 內的工作內容已完成，交回 manager；
+- `NEXT_ACTION=manager_fix_structure`：工作標記或翻譯單位結構有問題，worker 不要自行修復標記，交回 manager。
 
-使用者要求 2 個子代理處理 4 個檔案時，流程如下：
+## manager 完整驗證、合併與回寫
 
-1. 主代理先派出 2 個子代理，各自處理第 1 與第 2 個檔案。
-2. 其中任一子代理先回報完成時，主代理立刻 review 並驗收該檔案。
-3. 若驗收成功，主代理立刻更新 `progress.md`，關閉該子代理，然後新開下一個子代理去處理第 3 個檔案。
-4. 之後每次有子代理完成，就重複「立刻驗收、立刻更新進度、關閉該子代理、再新開下一個子代理」的節奏。
-5. 全部 4 個檔案都完成驗收後才結束。
+worker 回報 `worker_done` 後，manager 必須執行需要原始檔與 manifest 的完整 draft 驗證：
 
-## 進度檔格式
+```bash
+python3 <skill-dir>/scripts/validation.py <draft-file> \
+  --manifest <manifest-file> \
+  --project-root <project-root>
+```
+
+驗證會確認：
+
+- draft 是否仍有未翻譯單位；
+- translation unit、`translate` 標頭、來源位置註解、`old/new` 配對與縮排是否保留；
+- worker 是否只改動工作範圍；
+- Ren'Py tag、placeholder 與字串結構是否一致；
+- manifest 行號範圍、工作標記與實際 draft 是否相符。
+
+只有輸出 `NEXT_ACTION=merge_ready` 才能合併。先使用不帶 `--apply` 的預覽，確認檔案與行號正確，再執行：
+
+```bash
+python3 <skill-dir>/scripts/merge_translation.py <draft-file> \
+  --manifest <manifest-file> \
+  --project-root <project-root> \
+  --apply
+```
+
+合併後執行原始檔驗證：
+
+```bash
+python3 <skill-dir>/scripts/validation.py <translation-file>
+```
+
+輸出 `NEXT_ACTION=mark_complete` 才能勾選進度。輸出 `worker_continue` 時，清理已合併的 active draft 後再切下一批；輸出 `manager_fix_structure` 時由 manager 修復結構或丟棄並重建該 draft，不要要求 worker 修改來源註解、標頭或工作標記。
+
+驗證失敗時不應把 draft 合併回原始檔，也不應把檔案標成完成。manager 可以使用一般 `diff`／`git diff` 做人工 review，但不能以 diff 取代 `validation.py`。
+
+## progress.md
+
+使用以下腳本初始化或重建檔案清單：
+
+```bash
+python3 <skill-dir>/scripts/build_progress.py <scan-path>... \
+  --project-root <project-root>
+```
+
+它只掃描並列出 `.rpy`，不負責判斷翻譯完成度；重建時會保留既有項目的 `[x]` 狀態，新項目則為 `[ ]`。進度格式保持簡單：
 
 ```markdown
 # Translation Progress
 
-- [x] game/day1.rpy
-- [ ] game/day2.rpy
+- [ ] game/tl/tChinese/day1.rpy
+- [x] game/tl/tChinese/day2.rpy
 ```
+
+## translation-guide.md
+
+manager 維護專案根目錄的 `translation-guide.md`。只保留可重複利用且具有長期價值的譯名、術語、角色稱呼、語氣與特殊翻譯決策；若 worker 建議與既有 guide 衝突，保留既有 guide 並在回報中說明。
 
 ## 內部工具
 
-### `scripts/build_progress.py`
+- `scripts/build_progress.py`：建立或重建簡單的 progress 清單。
+- `scripts/split_translation.py`：依完整翻譯單位建立 draft 與 manifest。
+- `scripts/validation.py`：提供 worker-only、draft 完整驗證與原始檔驗證。
+- `scripts/merge_translation.py`：依 manifest 將已驗證的工作行範圍回寫原始檔。
+- `scripts/translation_units.py`、`scripts/draft_manifest.py`：共用解析與 manifest 型別。
 
-掃描 `.rpy` 並建立或重建 `progress.md`。
-
-### `scripts/validation.py`
-
-驗收單一 `.rpy`。輸出 `NEXT_ACTION` 與各類問題行號；只有 `NEXT_ACTION=mark_complete` 代表可勾選進度。
+worker 舊有的 `extract.py`、`replace.py` 不屬於新的 draft 流程，不要再把它們設為 worker 的強制步驟；保留它們僅為相容性用途。
