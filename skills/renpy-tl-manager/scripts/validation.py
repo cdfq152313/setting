@@ -1,266 +1,535 @@
 #!/usr/bin/env python3
-"""Validate a Ren'Py translation file after worker edits."""
-
-from __future__ import annotations
+"""Validate Ren'Py translation drafts and complete translation files."""
 
 import argparse
-import importlib.util
 import json
-import subprocess
+import re
 import sys
-from dataclasses import asdict, dataclass, field
+from collections import Counter
+from collections.abc import Sequence
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import cast
+
+from draft_manifest import (  # pyright: ignore[reportImplicitRelativeImport]
+    DraftManifest,
+    load_manifest,
+)
+from translation_units import (  # pyright: ignore[reportImplicitRelativeImport]
+    DRAFT_WORK_BEGIN,
+    DRAFT_WORK_END,
+    ParsedTranslationFile,
+    TranslationUnit,
+    is_blank,
+    is_full_line_comment,
+    is_source_location_comment,
+    line_without_ending,
+    parse_file,
+)
+
+TOKEN_RE = re.compile(
+    r"\{[^{}\n]*\}|\[[^\[\]\n]+\]|%\([^)]*\)[a-zA-Z]"
+)
 
 
-def load_worker_extract():
-    skills_dir = Path(__file__).resolve().parents[2]
-    extract_path = skills_dir / "renpy-tl-worker" / "scripts" / "extract.py"
-    spec = importlib.util.spec_from_file_location("renpy_tl_worker_extract", extract_path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"Unable to load worker extract.py: {extract_path}")
-
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+@dataclass(frozen=True)
+class ValidationIssue:
+    code: str
+    line: int | None
+    message: str
+    owner: str
 
 
-extract = load_worker_extract()
-
-EXPECTED_TRANSLATE_BLOCK_INDENT = 4
-
-
-@dataclass
-class UntranslatedIssue:
-    line: int
-    text: str
-    owner: str = "worker"
-
-
-@dataclass
-class BadIndentIssue:
-    line: int
-    actual: int
-    text: str
-    owner: str = "manager"
-
-
-@dataclass
-class CommentChangedIssue:
-    line: int
-    before: str
-    after: str
-    owner: str = "manager"
-
-
-@dataclass
-class LineCountChangedIssue:
-    before: int
-    after: int
-    owner: str = "manager"
-
-
-@dataclass
+@dataclass(frozen=True)
 class ValidationResult:
     path: str
-    untranslated: list[UntranslatedIssue] = field(default_factory=list)
-    bad_indent: list[BadIndentIssue] = field(default_factory=list)
-    comment_changed: list[CommentChangedIssue] = field(default_factory=list)
-    line_count_changed: list[LineCountChangedIssue] = field(default_factory=list)
+    mode: str
+    untranslated: tuple[ValidationIssue, ...] = ()
+    structural: tuple[ValidationIssue, ...] = ()
+    protected_changes: tuple[ValidationIssue, ...] = ()
+    token_changes: tuple[ValidationIssue, ...] = ()
 
+    @property
     def has_errors(self) -> bool:
         return any(
             (
                 self.untranslated,
-                self.bad_indent,
-                self.comment_changed,
-                self.line_count_changed,
+                self.structural,
+                self.protected_changes,
+                self.token_changes,
             )
         )
 
-
-def read_lines(path: Path) -> list[str]:
-    return path.read_text(encoding="utf-8").splitlines()
-
-
-def without_trailing_blank_lines(lines: Sequence[str]) -> Sequence[str]:
-    end = len(lines)
-    while end > 0 and not lines[end - 1].strip():
-        end -= 1
-    return lines[:end]
-
-
-def load_git_base(path: Path, rev: str) -> list[str]:
-    repo_root = subprocess.run(
-        ["git", "-C", str(path.parent), "rev-parse", "--show-toplevel"],
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    ).stdout.strip()
-    rel_path = path.resolve().relative_to(Path(repo_root).resolve()).as_posix()
-    blob = subprocess.run(
-        ["git", "-C", repo_root, "show", f"{rev}:{rel_path}"],
-        check=True,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    ).stdout
-    return blob.splitlines()
+    @property
+    def next_action(self) -> str:
+        if self.structural or self.protected_changes:
+            return "manager_fix_structure"
+        if self.untranslated or self.token_changes:
+            return "worker_continue"
+        if self.mode == "worker":
+            return "worker_done"
+        return "merge_ready" if self.mode == "draft" else "mark_complete"
 
 
-def count_leading_spaces(line: str) -> int:
-    count = 0
-    for char in line:
-        if char == " ":
-            count += 1
-            continue
-        if char == "\t":
-            return -1
-        break
-    return count
+@dataclass(frozen=True)
+class ValidationOptions:
+    path: Path
+    manifest: Path | None
+    project_root: Path | None
+    output_format: str
+    max_details: int
 
 
-def is_full_line_comment(line: str) -> bool:
-    return line.lstrip().startswith("#")
+def issue(
+    code: str,
+    line: int | None,
+    message: str,
+    owner: str,
+) -> ValidationIssue:
+    return ValidationIssue(code=code, line=line, message=message, owner=owner)
 
 
-def is_source_location_comment(line: str) -> bool:
-    return bool(extract.SOURCE_LOC_COMMENT_RE.match(line.strip()))
+def token_counter(texts: Sequence[str]) -> Counter[str]:
+    tokens: list[str] = []
+    for text in texts:
+        tokens.extend(TOKEN_RE.findall(text))
+    return Counter(tokens)
 
 
-def collect_untranslated(path: Path) -> list[UntranslatedIssue]:
-    return [
-        UntranslatedIssue(line=line_no, text=text)
-        for line_no, text in extract.parse_file(path)
-    ]
+def units_in_range(
+    parsed: ParsedTranslationFile,
+    start: int,
+    end: int,
+) -> tuple[TranslationUnit, ...]:
+    return tuple(
+        unit
+        for unit in parsed.units
+        if unit.start >= start and unit.end <= end
+    )
 
 
-def collect_bad_indent(lines: Sequence[str]) -> list[BadIndentIssue]:
-    issues: list[BadIndentIssue] = []
-    ranges = extract.collect_translate_block_ranges(lines)
-    for start, end, _label in ranges:
-        for idx in range(start + 1, end):
-            line = lines[idx]
-            if not line.strip():
-                continue
-            # Ranges end at the next translate header, so they also include
-            # the source-location comment immediately before that header.
-            if is_source_location_comment(line):
-                continue
-            actual = count_leading_spaces(line)
-            if actual != EXPECTED_TRANSLATE_BLOCK_INDENT:
-                issues.append(
-                    BadIndentIssue(
-                        line=idx + 1,
-                        actual=actual,
-                        text=line.strip(),
+def find_marker_lines(lines: Sequence[str], marker: str) -> tuple[int, ...]:
+    expected = f"# {marker}"
+    return tuple(
+        index
+        for index, line in enumerate(lines)
+        if line_without_ending(line).strip() == expected
+    )
+
+
+def validate_units(
+    parsed: ParsedTranslationFile,
+    line_offset: int = 0,
+) -> tuple[
+    tuple[ValidationIssue, ...],
+    tuple[ValidationIssue, ...],
+    tuple[ValidationIssue, ...],
+]:
+    untranslated: list[ValidationIssue] = []
+    structural: list[ValidationIssue] = []
+    token_changes: list[ValidationIssue] = []
+    for unit in parsed.units:
+        line = line_offset + unit.start
+        if unit.errors:
+            structural.append(
+                issue(
+                    "malformed_unit",
+                    line,
+                    f"{unit.kind} unit {unit.start}-{unit.end}: "
+                    + "; ".join(unit.errors),
+                    "manager",
+                )
+            )
+        if unit.untranslated:
+            untranslated.append(
+                issue(
+                    "untranslated",
+                    line,
+                    f"Untranslated {unit.kind} unit at lines "
+                    + f"{unit.start}-{unit.end}.",
+                    "worker",
+                )
+            )
+        if token_counter(unit.source_texts) != token_counter(unit.target_texts):
+            token_changes.append(
+                issue(
+                    "placeholder_mismatch",
+                    line,
+                    "Ren'Py tags or placeholders differ in unit "
+                    + f"{unit.start}-{unit.end}.",
+                    "worker",
+                )
+            )
+    return tuple(untranslated), tuple(structural), tuple(token_changes)
+
+
+def compare_line_ranges(
+    expected: Sequence[str],
+    actual: Sequence[str],
+    first_line: int,
+    code: str,
+    message: str,
+) -> tuple[ValidationIssue, ...]:
+    if tuple(expected) == tuple(actual):
+        return ()
+    issues: list[ValidationIssue] = []
+    for offset, (before, after) in enumerate(zip(expected, actual)):
+        if before != after:
+            issues.append(issue(code, first_line + offset, message, "manager"))
+    if len(expected) != len(actual):
+        issues.append(
+            issue(
+                "line_count_changed",
+                first_line,
+                f"Expected {len(expected)} lines but received {len(actual)}.",
+                "manager",
+            )
+        )
+    return tuple(issues)
+
+
+def validate_draft(
+    draft_path: Path,
+    manifest: DraftManifest,
+    project_root: Path,
+) -> ValidationResult:
+    draft = parse_file(draft_path)
+    source_path = project_root / manifest.translation_file
+    source = parse_file(source_path)
+    draft_lines = draft.lines
+    source_lines = source.lines
+    structural: list[ValidationIssue] = []
+    protected_changes: list[ValidationIssue] = []
+
+    begin_lines = find_marker_lines(draft_lines, DRAFT_WORK_BEGIN)
+    end_lines = find_marker_lines(draft_lines, DRAFT_WORK_END)
+    if len(begin_lines) != 1:
+        structural.append(
+            issue(
+                "work_begin_count",
+                None,
+                f"Expected one work-begin marker, found {len(begin_lines)}.",
+                "manager",
+            )
+        )
+    if len(end_lines) != 1:
+        structural.append(
+            issue(
+                "work_end_count",
+                None,
+                f"Expected one work-end marker, found {len(end_lines)}.",
+                "manager",
+            )
+        )
+
+    if len(begin_lines) == 1 and len(end_lines) == 1:
+        begin_line = begin_lines[0]
+        end_line = end_lines[0]
+        if begin_line >= end_line:
+            structural.append(
+                issue(
+                    "work_marker_order",
+                    begin_line + 1,
+                    "work-begin must appear before work-end.",
+                    "manager",
+                )
+            )
+        else:
+            outer = manifest.translation_file_lines
+            work = manifest.work_lines
+            if outer.end > len(source_lines):
+                structural.append(
+                    issue(
+                        "draft_range_outside_source",
+                        outer.end,
+                        "Manifest draft range extends beyond the source file.",
+                        "manager",
                     )
                 )
-    return issues
+            elif work.start < outer.start or work.end > outer.end:
+                structural.append(
+                    issue(
+                        "work_range_outside_draft",
+                        None,
+                        "Manifest work range is outside the draft range.",
+                        "manager",
+                    )
+                )
+            else:
+                expected_outer = source_lines[outer.start - 1 : outer.end]
+                work_offset = work.start - outer.start
+                work_end_offset = work.end - outer.start + 1
+                expected_prefix = expected_outer[:work_offset]
+                expected_suffix = expected_outer[work_end_offset:]
+                actual_prefix = draft_lines[:begin_line]
+                actual_suffix = draft_lines[end_line + 1 :]
+                protected_changes.extend(
+                    compare_line_ranges(
+                        expected_prefix,
+                        actual_prefix,
+                        outer.start,
+                        "context_changed",
+                        "Content outside the work range was changed.",
+                    )
+                )
+                protected_changes.extend(
+                    compare_line_ranges(
+                        expected_suffix,
+                        actual_suffix,
+                        work.end + 1,
+                        "context_changed",
+                        "Content outside the work range was changed.",
+                    )
+                )
+
+                expected_work = source_lines[work.start - 1 : work.end]
+                actual_work = draft_lines[begin_line + 1 : end_line]
+                protected_changes.extend(
+                    compare_protected_work_lines(
+                        expected_work,
+                        actual_work,
+                        work.start,
+                    )
+                )
+
+                compare_unit_structure(
+                    source,
+                    draft,
+                    outer.start,
+                    outer.end,
+                    structural,
+                )
+
+    untranslated, unit_structural, token_changes = validate_units(draft)
+    structural.extend(unit_structural)
+    return ValidationResult(
+        path=str(draft_path),
+        mode="draft",
+        untranslated=untranslated,
+        structural=tuple(structural),
+        protected_changes=tuple(protected_changes),
+        token_changes=token_changes,
+    )
 
 
-def collect_comment_changes(
-    base_lines: Sequence[str], current_lines: Sequence[str]
-) -> list[CommentChangedIssue]:
-    issues: list[CommentChangedIssue] = []
-    for idx, before in enumerate(base_lines[: len(current_lines)]):
-        if not is_full_line_comment(before):
+def compare_protected_work_lines(
+    expected: Sequence[str],
+    actual: Sequence[str],
+    first_line: int,
+) -> tuple[ValidationIssue, ...]:
+    if len(expected) != len(actual):
+        return (
+            issue(
+                "work_line_count_changed",
+                first_line,
+                "Worker changed the number of physical lines in the work range.",
+                "manager",
+            ),
+        )
+
+    issues: list[ValidationIssue] = []
+    for offset, (before, after) in enumerate(zip(expected, actual)):
+        before_body = line_without_ending(before)
+        after_body = line_without_ending(after)
+        if before_body == after_body:
             continue
-        after = current_lines[idx]
-        if before != after:
+        before_stripped = before_body.strip()
+        if (
+            is_blank(before)
+            or is_full_line_comment(before)
+            or is_source_location_comment(before)
+            or before_stripped.startswith(("translate ", "old "))
+        ):
             issues.append(
-                CommentChangedIssue(line=idx + 1, before=before, after=after)
-            )
-    return issues
-
-
-def validate(
-    path: Path,
-    base_lines: Optional[Sequence[str]],
-) -> ValidationResult:
-    current_lines = read_lines(path)
-    result = ValidationResult(path=str(path))
-    result.untranslated = collect_untranslated(path)
-    result.bad_indent = collect_bad_indent(current_lines)
-
-    if base_lines is not None:
-        normalized_base_lines = without_trailing_blank_lines(base_lines)
-        normalized_current_lines = without_trailing_blank_lines(current_lines)
-        if len(normalized_base_lines) != len(normalized_current_lines):
-            result.line_count_changed.append(
-                LineCountChangedIssue(
-                    before=len(normalized_base_lines),
-                    after=len(normalized_current_lines),
+                issue(
+                    "protected_work_line_changed",
+                    first_line + offset,
+                    "A source comment, header, or structural line in the work "
+                    + "range was changed.",
+                    "manager",
                 )
             )
-        result.comment_changed = collect_comment_changes(base_lines, current_lines)
+            continue
+        if before_body[: len(before_body) - len(before_body.lstrip())] != after_body[
+            : len(after_body) - len(after_body.lstrip())
+        ]:
+            issues.append(
+                issue(
+                    "indent_changed",
+                    first_line + offset,
+                    "Translation indentation was changed.",
+                    "manager",
+                )
+            )
+    return tuple(issues)
 
-    return result
+
+def compare_unit_structure(
+    source: ParsedTranslationFile,
+    draft: ParsedTranslationFile,
+    outer_start: int,
+    outer_end: int,
+    structural: list[ValidationIssue],
+) -> None:
+    source_units = units_in_range(source, outer_start, outer_end)
+    draft_units = draft.units
+    if len(source_units) != len(draft_units):
+        structural.append(
+            issue(
+                "unit_count_changed",
+                outer_start,
+                f"Expected {len(source_units)} translation units but found "
+                + f"{len(draft_units)} in the draft.",
+                "manager",
+            )
+        )
+        return
+
+    for source_unit, draft_unit in zip(source_units, draft_units):
+        if (
+            source_unit.kind != draft_unit.kind
+            or source_unit.language != draft_unit.language
+            or source_unit.label != draft_unit.label
+            or source_unit.source_texts != draft_unit.source_texts
+        ):
+            structural.append(
+                issue(
+                    "unit_identity_changed",
+                    source_unit.start,
+                    "Translation unit identity or source text changed.",
+                    "manager",
+                )
+            )
+            continue
+        # Target text changes are permitted inside the work range. Changes
+        # outside that range are caught by the raw prefix/suffix comparisons.
 
 
-def choose_next_action(result: ValidationResult) -> str:
-    structure_errors = (
-        result.bad_indent or result.comment_changed or result.line_count_changed
+def validate_file(path: Path) -> ValidationResult:
+    parsed = parse_file(path)
+    untranslated, structural, token_changes = validate_units(parsed)
+    markers = tuple(
+        index + 1
+        for index, line in enumerate(parsed.lines)
+        if "renpy-tl-draft:" in line
     )
-    if structure_errors:
-        return "manager_fix_structure"
-    if result.untranslated:
-        return "worker_continue"
-    return "mark_complete"
+    if markers:
+        structural = structural + (
+            issue(
+                "draft_marker_in_source",
+                markers[0],
+                "Draft-only work markers must not be merged into the source file.",
+                "manager",
+            ),
+        )
+    return ValidationResult(
+        path=str(path),
+        mode="file",
+        untranslated=untranslated,
+        structural=structural,
+        token_changes=token_changes,
+    )
+
+
+def validate_worker_draft(path: Path) -> ValidationResult:
+    parsed = parse_file(path)
+    structural: list[ValidationIssue] = []
+    begin_lines = find_marker_lines(parsed.lines, DRAFT_WORK_BEGIN)
+    end_lines = find_marker_lines(parsed.lines, DRAFT_WORK_END)
+    if len(begin_lines) != 1:
+        structural.append(
+            issue(
+                "work_begin_count",
+                None,
+                f"Expected one work-begin marker, found {len(begin_lines)}.",
+                "manager",
+            )
+        )
+    if len(end_lines) != 1:
+        structural.append(
+            issue(
+                "work_end_count",
+                None,
+                f"Expected one work-end marker, found {len(end_lines)}.",
+                "manager",
+            )
+        )
+    if (
+        len(begin_lines) == 1
+        and len(end_lines) == 1
+        and begin_lines[0] >= end_lines[0]
+    ):
+        structural.append(
+            issue(
+                "work_marker_order",
+                begin_lines[0] + 1,
+                "work-begin must appear before work-end.",
+                "manager",
+            )
+        )
+    untranslated, unit_structural, token_changes = validate_units(parsed)
+    structural.extend(unit_structural)
+    return ValidationResult(
+        path=str(path),
+        mode="worker",
+        untranslated=untranslated,
+        structural=tuple(structural),
+        token_changes=token_changes,
+    )
 
 
 def render_text(result: ValidationResult, max_details: int) -> str:
-    status = "FAIL" if result.has_errors() else "OK"
-    lines = [f"{status} {result.path}", f"NEXT_ACTION={choose_next_action(result)}"]
-    lines.append(
-        "SUMMARY "
-        f"untranslated={len(result.untranslated)} "
-        f"bad_indent={len(result.bad_indent)} "
-        f"comment_changed={len(result.comment_changed)} "
-        f"line_count_changed={str(bool(result.line_count_changed)).lower()}"
+    lines = [
+        f"{'FAIL' if result.has_errors else 'OK'} {result.path}",
+        f"NEXT_ACTION={result.next_action}",
+        (
+            f"SUMMARY untranslated={len(result.untranslated)} "
+            f"structural={len(result.structural)} "
+            f"protected_changes={len(result.protected_changes)} "
+            f"token_changes={len(result.token_changes)}"
+        ),
+    ]
+    all_issues = (
+        ("untranslated", result.untranslated),
+        ("structural", result.structural),
+        ("protected_changes", result.protected_changes),
+        ("token_changes", result.token_changes),
     )
-
-    def format_lines(issues: Sequence[object]) -> str:
-        shown = issues[:max_details]
-        line_numbers = [str(issue.line) for issue in shown]
-        if len(issues) > len(shown):
-            line_numbers.append("...")
-        return ",".join(line_numbers)
-
-    def emit_line_group(name: str, issues: Sequence[object]) -> None:
-        if not issues:
-            return
-        lines.append(f"{name} lines={format_lines(issues)}")
-
-    for issue in result.line_count_changed:
-        lines.append(f"line_count_changed before={issue.before} after={issue.after}")
-    emit_line_group("comment_changed", result.comment_changed)
-    emit_line_group("bad_indent", result.bad_indent)
-    emit_line_group("untranslated", result.untranslated)
+    for name, issues in all_issues:
+        for current in issues[:max_details]:
+            line = f" line={current.line}" if current.line is not None else ""
+            lines.append(f"{name}{line} {current.message}")
+        if len(issues) > max_details:
+            lines.append(f"{name} ...")
     return "\n".join(lines)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate a Ren'Py translation file for untranslated text, indentation, and changed comments."
+        description="Validate a Ren'Py translation draft or complete file."
     )
-    parser.add_argument("file", help="Target .rpy file to validate.")
-    parser.add_argument(
-        "--base",
-        help="Optional baseline file used to detect changed original comments.",
+    _ = parser.add_argument("path", help="Draft or translation .rpy file.")
+    _ = parser.add_argument(
+        "--manifest",
+        help="Manifest JSON for draft validation. Omit for whole-file validation.",
     )
-    parser.add_argument(
-        "--git-base",
-        help="Optional git revision used as the baseline, for example HEAD.",
+    _ = parser.add_argument(
+        "--worker",
+        action="store_true",
+        help="Validate only the draft, without reading its original file.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
+        "--project-root",
+        help="Project root used to resolve manifest translation_file.",
+    )
+    _ = parser.add_argument(
         "--format",
         choices=("text", "json"),
         default="text",
+        dest="output_format",
         help="Output format.",
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--max-details",
         type=int,
         default=10,
@@ -269,43 +538,61 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-
-    path = Path(args.file)
-    if not path.exists() or not path.is_file() or path.suffix != ".rpy":
+    path = Path(cast(str, args.path)).resolve()
+    manifest_arg = cast(str | None, args.manifest)
+    project_root_arg = cast(str | None, args.project_root)
+    worker_only = cast(bool, args.worker)
+    output_format = cast(str, args.output_format)
+    max_details = cast(int, args.max_details)
+    if max_details < 0:
+        _ = parser.error("--max-details must be >= 0")
+    if not path.is_file() or path.suffix != ".rpy":
         print(f"Target file not found or not .rpy: {path}", file=sys.stderr)
         return 2
-    if args.base and args.git_base:
-        parser.error("Use only one of --base or --git-base.")
-    if args.max_details < 0:
-        parser.error("--max-details must be >= 0")
+
+    options = ValidationOptions(
+        path=path,
+        manifest=Path(manifest_arg).resolve() if manifest_arg else None,
+        project_root=Path(project_root_arg).resolve()
+        if project_root_arg
+        else None,
+        output_format=output_format,
+        max_details=max_details,
+    )
 
     try:
-        base_lines: Optional[Sequence[str]] = None
-        if args.base:
-            base_lines = read_lines(Path(args.base))
-        elif args.git_base:
-            base_lines = load_git_base(path, args.git_base)
-
-        result = validate(path, base_lines)
+        if worker_only:
+            if options.manifest is not None or options.project_root is not None:
+                raise ValueError("--worker cannot be combined with draft options.")
+            result = validate_worker_draft(options.path)
+        elif options.manifest is None:
+            if options.project_root is not None:
+                raise ValueError("--project-root requires --manifest.")
+            result = validate_file(options.path)
+        else:
+            if options.project_root is None:
+                raise ValueError("--project-root is required with --manifest.")
+            manifest = load_manifest(options.manifest)
+            result = validate_draft(options.path, manifest, options.project_root)
     except (
         OSError,
         UnicodeDecodeError,
-        subprocess.CalledProcessError,
+        TypeError,
         ValueError,
+        json.JSONDecodeError,
     ) as exc:
         print(str(exc), file=sys.stderr)
         return 2
 
-    if args.format == "json":
+    if options.output_format == "json":
         print(json.dumps(asdict(result), ensure_ascii=False, indent=2))
     else:
-        print(render_text(result, args.max_details))
-
-    return 1 if result.has_errors() else 0
+        print(render_text(result, options.max_details))
+    return 1 if result.has_errors else 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
