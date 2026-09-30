@@ -8,10 +8,13 @@ ohmyzsh/ohmyzsh path:lib
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/docker
 
-# plugin
+# completion definitions
 zsh-users/zsh-completions
+
+# line editor and highlighting (load order matters)
+zdharma-continuum/fast-syntax-highlighting
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-history-substring-search
-zdharma-continuum/fast-syntax-highlighting
-djui/alias-tips
 
+# alias reminders (after OMZ aliases)
+MichaelAquilina/zsh-you-should-use
