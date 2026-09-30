@@ -1,7 +1,7 @@
 # install antidote if not exist
 [[ -r ~/.antidote/antidote.zsh ]] ||
     git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
-# load plugin 
+# load plugin
 source ~/.antidote/antidote.zsh
 antidote load ~/.zsh_plugins.txt
 
@@ -9,18 +9,16 @@ antidote load ~/.zsh_plugins.txt
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 (( ! ${+functions[p10k]} )) || p10k finalize
 
-# PATH 
+# PATH
 case `uname` in
   Darwin)
     export PATH=/opt/homebrew/bin:$PATH
-  ;; 
+  ;;
   Linux)
     export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
     export PATH=$HOME/.local/bin:$PATH
   ;;
 esac
-export PATH=$HOME/.pub-cache/bin:$PATH
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export LC_ALL=en_US.UTF-8
 fi
@@ -43,3 +41,5 @@ if command -v zoxide &> /dev/null; then
   eval "$(zoxide init zsh)"
 fi
 
+# Load optional machine-local settings.
+[[ -r ~/.zshrc.local ]] && source ~/.zshrc.local
