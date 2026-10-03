@@ -58,7 +58,7 @@ tasks:
     platforms:
       - windows
     cmds:
-      - choco install nushell vim git gsudo vscode godot-mono dotnet-sdk jetbrainstoolbox starship bat zoxide fzf fd
+      - winget install Nushell.Nushell vim.vim Git.Git gerardog.gsudo Microsoft.VisualStudioCode GodotEngine.GodotEngine.Mono Microsoft.DotNet.SDK.10 JetBrains.Toolbox Starship.Starship sharkdp.bat ajeetdsouza.zoxide junegunn.fzf sharkdp.fd --exact --source winget --accept-source-agreements --accept-package-agreements
 
   linux_dep:
     internal: true

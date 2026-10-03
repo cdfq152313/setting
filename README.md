@@ -21,7 +21,7 @@ task dep
 
 - linux 會使用 apt 安裝常用套件 ( 需在 ubuntu / debian 環境 )
 - mac 會使用 brew 安裝常用套件 ( 請先確認已安裝 homebrew )
-- windows 會使用 choco 安裝常用套件 ( 請先確認已安裝 chocolatey )
+- windows 會使用 winget 安裝常用套件 ( 請先確認已安裝 winget )
 - 不需要安裝的套件可以刪掉
 
 ## 安裝 vim plugin
