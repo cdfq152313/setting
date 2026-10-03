@@ -20,7 +20,7 @@ match $nu.os-info.name {
 # $env.LANG = "en_US.UTF-8"
 
 # Shell prompt
-$env.STARSHIP_CONFIG = ([$nu.home-path 'setting' 'nushell' 'starship.toml'] | path join)
+$env.STARSHIP_CONFIG = ([$nu.home-dir 'setting' 'nushell' 'starship.toml'] | path join)
 export-env { $env.STARSHIP_SHELL = "nu"; load-env {
     STARSHIP_SESSION_KEY: (random chars -l 16)
     PROMPT_MULTILINE_INDICATOR: (
@@ -105,4 +105,6 @@ source nu_scripts/custom-completions/tcpdump/tcpdump-completions.nu
 source nu_scripts/custom-completions/ssh/ssh-completions.nu
 
 # zoxide
-zoxide init nushell | save -f ~/.zoxide.nu
+if (which zoxide | is-not-empty) {
+    zoxide init nushell | save -f ~/.zoxide.nu
+}
