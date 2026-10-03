@@ -88,7 +88,7 @@ $env.NU_PLUGIN_DIRS = [
 source nu_scripts/aliases/git/git-aliases.nu
 alias gs = git status
 alias vi = vim
-alias cat = bat
+alias cat = open
 
 # Auto-completions
 source nu_scripts/custom-completions/curl/curl-completions.nu
