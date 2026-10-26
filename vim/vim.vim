@@ -24,7 +24,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'terryma/vim-expand-region'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'github/copilot.vim'
 Plug 'embear/vim-localvimrc'
 Plug 'vim-test/vim-test'
 Plug 'airblade/vim-rooter'
